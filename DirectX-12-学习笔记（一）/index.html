@@ -18,7 +18,7 @@ var CONFIG = {
   assistSearch: undefined,
   fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
   sidebar: {"offsetTop":"20px","tocMaxDepth":6},
-  header: {"enable":true,"showOnPost":true,"scrollDownIcon":false},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":true},
   postWidget: {"endText":true},
   nightMode: {"enable":true},
   back2top: {"enable":true},
@@ -35,7 +35,7 @@ var CONFIG = {
   sourcePath: {"js":"js","css":"css","images":"images"},
 };
 
-window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.0.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/about"><span class="header-nav-menu-item__icon"><i class="fas fa-user"></i></span><span class="header-nav-menu-item__text">关于</span></a></div></div><div class="header-nav-search"><span class="header-nav-search__icon"><i class="fas fa-search"></i></span><span class="header-nav-search__text">搜索</span></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">PepcyCh's Blog</div><div class="header-banner-info__subtitle"></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">DirectX 12 学习笔记（一）</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2020-08-04</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-02-14</span></span></div></header><div class="post-body"><p>因为觉着 DirectX 12 和 Vulkan（还有 Metal）作为所谓现代的图形 API，有必要依次学一学，因为之前学的是 OpenGL 3.3。</p>
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.0.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/about"><span class="header-nav-menu-item__icon"><i class="fas fa-user"></i></span><span class="header-nav-menu-item__text">关于</span></a></div></div><div class="header-nav-search"><span class="header-nav-search__icon"><i class="fas fa-search"></i></span><span class="header-nav-search__text">搜索</span></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">PepcyCh's Blog</div><div class="header-banner-info__subtitle"></div></div><div class="header-banner-arrow"><div class="header-banner-arrow__icon"><i class="fas fa-angle-down"></i></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">DirectX 12 学习笔记（一）</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2020-08-04</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-02-14</span></span></div></header><div class="post-body"><p>因为觉着 DirectX 12 和 Vulkan（还有 Metal）作为所谓现代的图形 API，有必要依次学一学，因为之前学的是 OpenGL 3.3。</p>
 <p>总之先从 DirectX 12 开始，用的教程是 Frank Luna 的书《Introduction to 3D Game Programming with DirectX12》，没有中文的样子，搞到的电子版有 1200 页。。。有三部分，第一部分（前三章）是数学，跳过了；第二部分（4~14 章）是 DirectX 12 基础，也就是本笔记时看过去的部分；第三部分（15~23 章）算是专题，比如法线贴图、第一人称摄像机、AO 等，之后会继续看下去。</p>
 <p>书有一个配套的代码仓库：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://github.com/d3dcoder/d3d12book" >d3dcoder/d3d12book</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
 <p>我也是跟着书和这个仓库每章也写了，大部分是一样的，但也改了一些部分，比如 DDS 材质的加载使用 DirectXTK12 库，而书中是作者自己魔改的 DirectXTK11。另一点，处于个人喜好，没有用 Visual Studio 的项目，还是用的 VS Code + CMake。代码仓库是：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://github.com/PepcyCh/learn-directx12" >PepcyCh/learn-directx12</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
@@ -44,73 +44,73 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.0.0"></he
 <a id="more"></a>
 
         <h2 id="每章代码简介"   >
-          <a href="#每章代码简介" class="heading-link"><i class="fas fa-link"></i></a>每章代码简介</h2>
+          <a href="#每章代码简介" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#每章代码简介"></a> 每章代码简介</h2>
       
 
         <h3 id="chap-4-initialization"   >
-          <a href="#chap-4-initialization" class="heading-link"><i class="fas fa-link"></i></a>chap. 4 - initialization</h3>
+          <a href="#chap-4-initialization" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#chap-4-initialization"></a> chap. 4 - initialization</h3>
       
 <p>Windows 窗口及 DirectX 12 必要的初始化，程序运行得到的是一个能显示 FPS 以外只有纯色背景的窗口。</p>
 
         <h3 id="chap-6-drawing-i"   >
-          <a href="#chap-6-drawing-i" class="heading-link"><i class="fas fa-link"></i></a>chap. 6 - drawing I</h3>
+          <a href="#chap-6-drawing-i" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#chap-6-drawing-i"></a> chap. 6 - drawing I</h3>
       
 <p>DirectX 12 绘制最基本的内容，绘制一个彩色立方体。</p>
 <p><code>ch06_box</code> 是跟着原书和仓库来的，<code>ch06_box_extra</code> 是书上这一章的习题 2，并且从原来的左手系改成了自己更习惯的右手系。</p>
 
         <h3 id="chap-7-drawing-ii"   >
-          <a href="#chap-7-drawing-ii" class="heading-link"><i class="fas fa-link"></i></a>chap. 7 - drawing II</h3>
+          <a href="#chap-7-drawing-ii" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#chap-7-drawing-ii"></a> chap. 7 - drawing II</h3>
       
 <p>引入了「帧资源（Frame Resource）」与「渲染物体（Render Item）」进行渲染，同时向 <code>Common</code> 内加入了一个 <code>GeometryGenerator</code> 来生成立方体、圆柱（圆台）、经纬球、几何球等集合体。</p>
 <p><code>ch07_shape</code> 是绘制 Geometry Generator 生成的几何体（把一侧的经纬球改成了几何球），并通过「1」键开启或关闭线框模式。</p>
 <p><code>ch07_land_wave</code> 是以平面为基础绘制「山川河流」，大部分后续代码也是由此改来。</p>
 
         <h3 id="chap-8-lighting"   >
-          <a href="#chap-8-lighting" class="heading-link"><i class="fas fa-link"></i></a>chap. 8 - lighting</h3>
+          <a href="#chap-8-lighting" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#chap-8-lighting"></a> chap. 8 - lighting</h3>
       
 <p>使用 Blinn-Phong 光照绘制山川河流的例子。这个 Blinn-Phong 和当时在 Learn OpenGL 学的有所区别，用到的参数分别是漫反射（diffuse）、环境光（ambient）、粗糙度（roughness）和正射时的菲涅尔系数。</p>
 
         <h3 id="chap-9-texturing"   >
-          <a href="#chap-9-texturing" class="heading-link"><i class="fas fa-link"></i></a>chap. 9 - texturing</h3>
+          <a href="#chap-9-texturing" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#chap-9-texturing"></a> chap. 9 - texturing</h3>
       
 <p>在山川河流的例子中加入材质，使用 DDS 材质。</p>
 
         <h3 id="chap-10-blending"   >
-          <a href="#chap-10-blending" class="heading-link"><i class="fas fa-link"></i></a>chap. 10 - blending</h3>
+          <a href="#chap-10-blending" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#chap-10-blending"></a> chap. 10 - blending</h3>
       
 <p>在山川河流的例子中，使用混合绘制半透明的水。</p>
 
         <h3 id="chap-11-stenciling"   >
-          <a href="#chap-11-stenciling" class="heading-link"><i class="fas fa-link"></i></a>chap. 11 - stenciling</h3>
+          <a href="#chap-11-stenciling" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#chap-11-stenciling"></a> chap. 11 - stenciling</h3>
       
 <p>使用模板来模拟镜子的效果，加入了练习中的地板镜像。同时实现了 Learn OpenGL 那边讲过的用模板实现的物体轮廓，通过「1」键来开启或关闭。</p>
 
         <h3 id="chap-12-geometry-shader"   >
-          <a href="#chap-12-geometry-shader" class="heading-link"><i class="fas fa-link"></i></a>chap. 12 - geometry shader</h3>
+          <a href="#chap-12-geometry-shader" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#chap-12-geometry-shader"></a> chap. 12 - geometry shader</h3>
       
 <p>在山川河流的例子中，使用几何着色器实现的告示板（Billboard）技术来绘制树木。</p>
 
         <h3 id="chap-13-compute-shader"   >
-          <a href="#chap-13-compute-shader" class="heading-link"><i class="fas fa-link"></i></a>chap. 13 - compute shader</h3>
+          <a href="#chap-13-compute-shader" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#chap-13-compute-shader"></a> chap. 13 - compute shader</h3>
       
 <p><code>ch13_wave</code> 是在山川河流的例子中，使用计算着色器更新水面的水波。</p>
 <p><code>ch13_blur</code> 是通过计算着色器对山川河流的渲染结果进行高斯模糊。</p>
 <p><code>ch13_sobel</code> 是使用 Sobel 算子对山川河流的渲染结果进行边缘检测，并通过一次渲染屏幕四边形来为渲染结果加入描边的效果。我在代码中结合了光照章节中的练习 6（一种卡通渲染方法）。</p>
 
         <h3 id="chap-14-tessellation"   >
-          <a href="#chap-14-tessellation" class="heading-link"><i class="fas fa-link"></i></a>chap. 14 - tessellation</h3>
+          <a href="#chap-14-tessellation" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#chap-14-tessellation"></a> chap. 14 - tessellation</h3>
       
 <p><code>ch14_tessellation_basic</code> 是通过细分来生成山川河流中的山的顶点，根据到观察点的距离决定细分系数以实现一种 LOD。</p>
 <p><code>ch14_tessellation_bezier</code> 通过细分生成贝塞尔曲面。</p>
 
         <h2 id="win32-窗口"   >
-          <a href="#win32-窗口" class="heading-link"><i class="fas fa-link"></i></a>Win32 窗口</h2>
+          <a href="#win32-窗口" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#win32-窗口"></a> Win32 窗口</h2>
       
 <p>通过一个 <code>WNDCLASS</code> 对象来设定窗口的一些特性（如图标、光标样式、事件处理函数）并通过 <code>RegisterClass()</code> 来注册这一类窗口；然后通过 <code>CreateWindow()</code> 来创建真正的窗口。</p>
 <p>其中，这个事件处理函数的签名大致如下 <code>LRESULT CALLBACK (HWND win, UINT msg, WPARAM w_param, LPARAM l_param)</code>，其中 <code>HWND win</code> 就是窗口的句柄（指针），虽然我们把它存了起来，但还是需要以参数的形式提供在其中，可能会觉得有些没有必要。其实，在 <code>CreateWindow()</code> 的期间就会触发事件处理函数，而我们存的句柄来自 <code>CreateWindow()</code> 的返回值，这时还是无效的，所以需要把那个有效的句柄以参数的形式传入。在编写具体函数体的时候也要注意要使用参数中的句柄而不是存储的变量。</p>
 
         <h2 id="directx-12-渲染管线"   >
-          <a href="#directx-12-渲染管线" class="heading-link"><i class="fas fa-link"></i></a>DirectX 12 渲染管线</h2>
+          <a href="#directx-12-渲染管线" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#directx-12-渲染管线"></a> DirectX 12 渲染管线</h2>
       
 <p>DirectX 12 一次渲染经过一下步骤：</p>
 <ul>
@@ -127,11 +127,11 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.0.0"></he
 <p>其中 IA、Tessellation 和 RS 是不可编程的。此外，还有一个可单独使用的 Computer Shader（CS），不在渲染管线之中。</p>
 
         <h2 id="directx-12-的元素"   >
-          <a href="#directx-12-的元素" class="heading-link"><i class="fas fa-link"></i></a>DirectX 12 的元素</h2>
+          <a href="#directx-12-的元素" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#directx-12-的元素"></a> DirectX 12 的元素</h2>
       
 
         <h3 id="comptrt"   >
-          <a href="#comptrt" class="heading-link"><i class="fas fa-link"></i></a>ComPtr&lt;T&gt;</h3>
+          <a href="#comptrt" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#comptrt"></a> <code>ComPtr&lt;T&gt;</code></h3>
       
 <p>DirectX 12 中的许多对象都是通过一个工厂方法来创建，而这些对象都是 Windows 的 COM（Component Object Model）对象，要通过智能指针的方式管理这些对象就得用 WRL（Windows Runtime Library）的 <code>ComPtr&lt;T&gt;</code>，它会在最后调用 COM 对象具体子类实现的一个释放对象的函数。如果把非 COM 的类作为模板参数给 <code>ComPtr&lt;T&gt;</code>，就会报错说 <code>T</code> 没有那个释放函数（当然，你按着那个签名实现一个也成吧……）；如果把 COM 的类用 C++ 自己的智能指针管理，可能会有问题（<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://stackoverflow.com/questions/21820301/using-stdunique-ptr-for-managing-com-objects" >Using std::unique_ptr for managing COM objects</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>）。</p>
 <p>这些 COM 对象的基类可以根据类名的前缀分为 2 种：</p>
@@ -141,31 +141,31 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.0.0"></he
 </ul>
 
         <h3 id="d3d12-调试层"   >
-          <a href="#d3d12-调试层" class="heading-link"><i class="fas fa-link"></i></a>D3D12 调试层</h3>
+          <a href="#d3d12-调试层" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#d3d12-调试层"></a> D3D12 调试层</h3>
       
 <p>对应的接口基类为 <code>ID3D12Debug</code>，通过开启调试层，可以在调试模式下（如 <code>gdb</code> 中）看到更详细的错误或警告信息，方便调试。</p>
 
         <h3 id="idxgifactory-id3d12device"   >
-          <a href="#idxgifactory-id3d12device" class="heading-link"><i class="fas fa-link"></i></a>IDXGIFactory &amp; ID3D12Device</h3>
+          <a href="#idxgifactory-id3d12device" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#idxgifactory-id3d12device"></a> <code>IDXGIFactory</code> &amp; <code>ID3D12Device</code></h3>
       
 <p>这两个类是创建 DXGI / DirectX 12 对象的工厂。一般我们在创建完窗口后就会创建这两个对象。</p>
 <p><em>PS：代码中实际使用的基类是 <code>IDXGIFactory4</code>。</em></p>
 
         <h3 id="d3d12_xxx_desc"   >
-          <a href="#d3d12_xxx_desc" class="heading-link"><i class="fas fa-link"></i></a>D3D12_XXX_DESC</h3>
+          <a href="#d3d12_xxx_desc" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#d3d12_xxx_desc"></a> <code>D3D12_XXX_DESC</code></h3>
       
 <p>在使用 <code>ID3D12Device</code> 对象的工厂方法创建对象时，经常需要填写一个 <code>D3D12_XXX_DESC</code> 对象并作为参数传给工厂方法。这些对象中记录了创建对象时的一些配置。为了方便编程，微软提供了 <code>d3dx12.h</code> 的头文件（不自带，需要去 GitHub 之类的地方搞一份），一些比较复杂的类有相应的 <code>CD3DX12_XXX_DESC</code> 类，它们继承自相应的 <code>D3D12_XXX_DESC</code> 类，没有新增任何成员变量，但新增了一些方便方法，以简便地填写一个对象。</p>
 <p>除了以 <code>_DESC</code> 结尾地类，还有一些其他的东西，如 <code>D3D12_RESOURCE_BARRIER</code> 有着类似的情况，只不过不是用于创建对象。</p>
 
         <h3 id="swap-chain"   >
-          <a href="#swap-chain" class="heading-link"><i class="fas fa-link"></i></a>Swap Chain</h3>
+          <a href="#swap-chain" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#swap-chain"></a> Swap Chain</h3>
       
 <p>一般我们渲染时为了使画面稳定，显示的缓冲和绘制目标会分开来，等绘制完毕后，让它去显示，而原来显示的缓冲成为下一帧绘制的目标。这样的机制成为交换链（Swap Chain，对应的接口基类为 <code>IDXGISwapChain</code>），一般会使用 2 个或 3 个缓冲。</p>
 <p>在相应的配置类 <code>DXGI_SWAP_CHAIN_DESC</code> 中，有一项 <code>SwapEffect</code> 应当设置为 <code>DXGI_SWAP_EFFECT_FLIP_DISCARD</code> 或 <code>DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL</code>，这个时候，尝试建立一个 MSAA 的交换链会 RE，所以，原书及相应仓库中的 MSAA 代码是不能跑的。</p>
 <p><em>PS：代码中实际使用的基类是 <code>IDXGISwapChain1</code> 和 <code>DXGI_SWAP_CHAIN_DESC1</code>。</em></p>
 
         <h3 id="command-allocator-queue-and-list"   >
-          <a href="#command-allocator-queue-and-list" class="heading-link"><i class="fas fa-link"></i></a>Command Allocator、Queue and List</h3>
+          <a href="#command-allocator-queue-and-list" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#command-allocator-queue-and-list"></a> Command Allocator、Queue and List</h3>
       
 <p>在 DirectX 12 中，并不是 CPU 提交指令给 GPU 让它直接执行，然后等 GPU 执行完毕后再运行 CPU 侧的下一条指令，而是先把一些命令存起来，然后再一起交给 GPU 让它去执行，并且 CPU 可以继续执行后续的代码。</p>
 <p>这些命令由命令列表（Command List，对应的接口基类为 <code>ID3D12CommandList</code>）对象的方法添加到列表之中；而列表使用的空间来自命令分配器（Command Allocator，对应的接口基类为 <code>ID3D12CommandAllocator</code>）；命令队列（Command Queue，对应的接口基类为 <code>ID3D12CommandQueue</code>）则负责把列表里的命令提交给 GPU，也负责一些 CPU 与 GPU 的同步。</p>
@@ -173,7 +173,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.0.0"></he
 <p>因为 CPU 与 GPU 是并行的，CPU 在运行后续代码时可能 GPU 还在执行列表里的命令，这里就要保障分配器对象不变（因为命令的数据所占的空间由分配器管着）。</p>
 
         <h3 id="fence"   >
-          <a href="#fence" class="heading-link"><i class="fas fa-link"></i></a>Fence</h3>
+          <a href="#fence" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#fence"></a> Fence</h3>
       
 <p>CPU 与 GPU 是并行的，因此需要一个机制来让 CPU 知道 GPU 有没有完成某些工作，已让 CPU 部分可以安全地继续执行下去。</p>
 <p>Fence 可以认为是插入到命令之间的一个整数，一般我们会让这个整数随插入次数每次加一，我们可以通过最近见到的一个 Fence 的数字是多少来判断它某个 Fence 之前的命令有没有全部完成。</p>
@@ -181,7 +181,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.0.0"></he
 <p>我们需要一个 Fence 对象（对应的接口基类为 <code>ID3D12Fence</code>），它会记录最近一个 Fence 的数字。</p>
 
         <h3 id="资源-描述子-描述子堆"   >
-          <a href="#资源-描述子-描述子堆" class="heading-link"><i class="fas fa-link"></i></a>资源、描述子、描述子堆</h3>
+          <a href="#资源-描述子-描述子堆" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#资源-描述子-描述子堆"></a> 资源、描述子、描述子堆</h3>
       
 <p>DirectX 12 中，资源（Resource，相应的接口基类为 <code>ID3D12Resource</code>）大致可以分为两大类，缓冲（buffer）和材质（texture）。</p>
 <p>资源通过描述子（Descriptor，因历史原因也叫 View）来描述，一个资源上可以有多个描述子。描述有三（五）类，分别是：</p>
@@ -200,7 +200,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.0.0"></he
 <p>在创建资源时，需要传入一个 <code>D3D12_HEAP_PROPERTIES</code> 的对象，关于这一块内容的具体描述，可以看 <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://zhangdoa.com/posts/walking-through-the-heap-properties-in-directx-12" >Walking through the heap properties in DirectX 12</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>。</p>
 
         <h3 id="资源状态-barrier"   >
-          <a href="#资源状态-barrier" class="heading-link"><i class="fas fa-link"></i></a>资源状态 &amp; Barrier</h3>
+          <a href="#资源状态-barrier" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#资源状态-barrier"></a> 资源状态 &amp; Barrier</h3>
       
 <p>我们可能会让一个着色器程序先写入一个材质，再让另一个着色器程序读取写入的数据（这是非常常见的场景），在第二个着色器程序开始之前，必须要保证第一个着色器程序已经把材质写好。我们确实可以通过 flush 的方法先等待第一个操作完毕再运行第二个着色器，不过，在更复杂的场景中，这样做一是人自己要 flush 会比较麻烦，二是有些对材质的操作其实是可以并行的，我们 flush 还会减慢运行速度，这时就需要一个新的机制来处理同步的问题，就是 Barrier。</p>
 <p>每个资源都会有一个资源状态（Resource State），在资源需要切换状态时，需要插入一个对应的状态转换 Barrier，它会根据资源的前后状态来考虑需要以怎样的方式来同步，而且只会影响使用该资源的命令。</p>
@@ -210,25 +210,25 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.0.0"></he
 <p>一些比较常用的状态有：Common、Generic Read、Unordered Access、Render Target、Copy Source/Destination、Resolve Source/Destination 等。虽然代码中经常有转换到 Generic Read 的代码，但官方文档上似乎并不推荐这样做。</p>
 
         <h3 id="vertex-buffer-index-buffer"   >
-          <a href="#vertex-buffer-index-buffer" class="heading-link"><i class="fas fa-link"></i></a>Vertex Buffer &amp; Index Buffer</h3>
+          <a href="#vertex-buffer-index-buffer" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#vertex-buffer-index-buffer"></a> Vertex Buffer &amp; Index Buffer</h3>
       
 <p>DirectX 12 中，顶点与索引的缓冲也是一种资源，它们的描述子类型是 VBV（Vertex Buffer View）与 IBV（Index Buffer View），不过这两个描述子与之前提到的五种不他一样，VBV 与 IBV 不存在描述子堆中，也不是通过 GPU 句柄访问，而是直接把 <code>D3D12_VERTEX_BUFFER_VIEW</code> 与 <code>D3D12_INDEX_BUFFER_VIEW</code> 对象传给命令列表的 <code>DrawInstanced()</code> 或 <code>DrawIndexedInstanced()</code> 中。</p>
 <p>在 <code>DrawIndexedInstanced()</code> 中，还有两个参数 <code>StartIndexLocation</code> 和 <code>BaseVertexLocation</code>，前者指 Index Buffer 中起始的位置，后者指索引中的每一项要加上的一个数值（比如把多个小的几何体的 Vertex/Index Buffer 拼成一个时，需要设置这个值）。</p>
 
         <h3 id="着色器shader"   >
-          <a href="#着色器shader" class="heading-link"><i class="fas fa-link"></i></a>着色器（Shader）</h3>
+          <a href="#着色器shader" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#着色器shader"></a> 着色器（Shader）</h3>
       
 <p>不像 OpenGL，可以把 VS、PS 等全都写在同一个 HLSL 文件内，DirectX 12 提供的函数可以传入各自的入口函数；此外，也可以通过函数传入宏定义。比起 GLSL，HLSL 的感觉更像 C++ 一些，不过矩阵乘法要用 <code>mul()</code>，使用 <code>*</code> 表示的则是分量乘法，这一点稍微有点难受。</p>
 <p>着色器程序的一些输入输出会有一个语义名（Semantic Name），其中一些有特殊意义的语义名均以 <code>SV_</code> 开头。当我们把 VS 与 PS 分开写的时候，HLSL 通过语义名来判断哪两个变量是同一个，即使它们的变量名不同，不像 GLSL 中使用变量名来判断。</p>
 
         <h3 id="input-layout"   >
-          <a href="#input-layout" class="heading-link"><i class="fas fa-link"></i></a>Input Layout</h3>
+          <a href="#input-layout" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#input-layout"></a> Input Layout</h3>
       
 <p>VS 需要知道 Vertex Buffer 中每个顶点中每一项的语义名、大小、位置、步长（stride），描述这些东西的叫做输入布局（Input Layout），有点类似于 OpenGL 的 Vertex Attribute。</p>
 <p>在输入布局的参数中，还有一个指定输入槽（slot），一个般一个槽对应一个 Vertex Buffer，比如位置一个缓冲、法线另一个缓冲，把它们放在两个槽上。原书代码中基本上只是用一个槽，我也只在其中一个练习中使用了多于一个槽。</p>
 
         <h3 id="根签名-cbv-srv-uav-static-sampler"   >
-          <a href="#根签名-cbv-srv-uav-static-sampler" class="heading-link"><i class="fas fa-link"></i></a>根签名 &amp; CBV、SRV、UAV、Static Sampler</h3>
+          <a href="#根签名-cbv-srv-uav-static-sampler" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#根签名-cbv-srv-uav-static-sampler"></a> 根签名 &amp; CBV、SRV、UAV、Static Sampler</h3>
       
 <p>如在描述子那里说的那样，通过 CBV 向着色器传递诸如光源、变换矩阵之类的东西，通过 SRV 向着色器传递只读材质，通过 UAV 传入可写材质。在着色器程序中，还需要为它们指明使用的寄存器，CBV 使用 <code>bx</code>（指 <code>b0</code>、<code>b1</code>……这样，后同），SRV 使用 <code>tx</code>，UAV 使用 <code>ux</code>。此外，还有一个称作静态采样器（Static Sampler）的东西，使用寄存器 <code>sx</code>，它的作用是采样材质。与 OpenGL 不同，OpenGL 把线性插值还是最邻近采样、越界处理放在对材质的设置中，DirectX 12 则把它们单独出来成为采样器。</p>
 <p>使用着色器时，需要有一个东西说明我们使用了几个 CBV/SRV/UAV/Static Sampler，这样的东西称为根签名（Root Signature）。一个根签名通过一个根参数（Root Parameter）的数组和可选的静态采样器的数组创建，根参数数组则依次描述使用的 CBV/SRV/UAV，每一个根参数可以是：</p>
@@ -254,24 +254,24 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.0.0"></he
 <p>这会带来两个问题，一是要考虑使用空间大小，二是要考虑 C++ 代码中要传给这个 Constant Buffer 的结构体的内存布局要一样（比如，不得不插入空隙时，加入一个 <code>float _padding</code> 字段）。</p>
 
         <h3 id="pipeline-state-objectpso"   >
-          <a href="#pipeline-state-objectpso" class="heading-link"><i class="fas fa-link"></i></a>Pipeline State Object（PSO）</h3>
+          <a href="#pipeline-state-objectpso" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#pipeline-state-objectpso"></a> Pipeline State Object（PSO）</h3>
       
 <p>在管线状态对象（PSO）中，我们指明绘制要使用的着色器、深度与模板函数、混合函数、背面剔除与正面旋转方向、填充方式（常规还是线框）等。</p>
 <p>区分绘制用的 Graphics PSO 和计算着色器的 Compute PSO。</p>
 
         <h2 id="directx-12-相关的其他内容"   >
-          <a href="#directx-12-相关的其他内容" class="heading-link"><i class="fas fa-link"></i></a>DirectX 12 相关的其他内容</h2>
+          <a href="#directx-12-相关的其他内容" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#directx-12-相关的其他内容"></a> DirectX 12 相关的其他内容</h2>
       
 
         <h3 id="帧资源frame-resource"   >
-          <a href="#帧资源frame-resource" class="heading-link"><i class="fas fa-link"></i></a>帧资源（Frame Resource）</h3>
+          <a href="#帧资源frame-resource" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#帧资源frame-resource"></a> 帧资源（Frame Resource）</h3>
       
 <p>一帧 flush 一次的做法显然完全没有利用 CPU 与 GPU 的并行性，它还是先 CPU 工作一段，然后 GPU 工作一段，以此交替地工作下去。我们希望这一帧的命令在执行时，下一帧的 CPU 工作也能进行，但由于每一帧的 CPU 工作会修改着色器使用的 Constant Buffer 和命令分配器里的命令，会影响正在执行的 GPU 工作，为了做到并行，我们把这些东西存储多份，每一份就被称作一个帧资源。</p>
 <p>如果我们有 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span> 份帧资源，那么 GPU 就可以与接下来 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k - 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.77777em;vertical-align:-0.08333em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> 帧的 CPU 并行，如果两者的工作时间差不多，那我们就做到了最优的并行。在原书代码中，选用了 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">k = 3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">3</span></span></span></span>。</p>
 <p>为了在数据发生修改时，新数据能够写入每一份帧资源的 Constant Buffer 中，我们在原始数据的结构中加入一个 dirty 字段，当修改时，赋值为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span>，写入后字段自减一。这样不仅能保证一次修改的数据被写入，在每一帧都修改的情况下也会得到正确的结果。</p>
 
         <h3 id="单帧绘制流程"   >
-          <a href="#单帧绘制流程" class="heading-link"><i class="fas fa-link"></i></a>单帧绘制流程</h3>
+          <a href="#单帧绘制流程" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#单帧绘制流程"></a> 单帧绘制流程</h3>
       
 <ol>
 <li>切换到下一个帧资源，并等待该帧资源的上次绘制结束</li>
@@ -294,13 +294,13 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.0.0"></he
 </ol>
 
         <h3 id="计算着色器"   >
-          <a href="#计算着色器" class="heading-link"><i class="fas fa-link"></i></a>计算着色器</h3>
+          <a href="#计算着色器" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#计算着色器"></a> 计算着色器</h3>
       
 <p>在计算着色器程序中，需要声明属性 <code>[numthreads(x, y, z)]</code>，表示这么大的一块作为一组线程组（Thread Group），同一个线程组的线程并行，且可以共享着色器程序中标有 <code>groupshared</code> 的数据，可以在程序中通过 <code>GroupMemoryBarrierWithGroupSync()</code> 来同步，不同线程组之间则不行。一般来说，线程组的大小应该是一个数的倍数（根据原书上的描述，NVIDIA 显卡是 32 的倍数，AMD 显卡是 64 的倍数）才能达到更好的效率。</p>
 <p>在计算着色器中，越界的部分写入无效，读取则读取到 0。</p>
 
         <h3 id="细分"   >
-          <a href="#细分" class="heading-link"><i class="fas fa-link"></i></a>细分</h3>
+          <a href="#细分" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#细分"></a> 细分</h3>
       
 <p>细分包括可编程的 HS 和 DS，以及固定的 Tessellation 步骤。</p>
 <p>要使用细分，要绘制的图元的图元类型得是 <code>D3D_PRIMITIVE_TOPOLOGY_X_CONTROL_POINT_PATCHLIST</code>（其中 <code>X</code> 取 1 - 32，表示控制点的数目），PSO 的图元类型是 <code>D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH</code>。</p>
@@ -311,17 +311,17 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.0.0"></he
 <p>DS 的输入不是具体的细分后顶点，而是一个跟据 patch 不同的参数（四边形的话就是 uv，三角形就是重心坐标）。需要我们手动根据输入的顶点来算出真正的细分后顶点（可以认为，Tessellation 步骤不知道我们的控制顶点是什么，只是在细分一个标准的线/三角形/正方形，所以也只能给出参数）。</p>
 
         <h2 id="代码中的其他内容"   >
-          <a href="#代码中的其他内容" class="heading-link"><i class="fas fa-link"></i></a>代码中的其他内容</h2>
+          <a href="#代码中的其他内容" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#代码中的其他内容"></a> 代码中的其他内容</h2>
       
 
         <h3 id="变换矩阵的左手系-右手系"   >
-          <a href="#变换矩阵的左手系-右手系" class="heading-link"><i class="fas fa-link"></i></a>变换矩阵的左手系 &amp; 右手系</h3>
+          <a href="#变换矩阵的左手系-右手系" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#变换矩阵的左手系-右手系"></a> 变换矩阵的左手系 &amp; 右手系</h3>
       
 <p>原书代码使用的数学库 DirectX Math 提供的生成透视矩阵、观察矩阵等矩阵的函数末尾有一个 <code>LH</code> 或 <code>RH</code> 后缀，指示左手矩阵还是右手矩阵。我们在学 OpenGL 使用的 glm 以及我自己写的数学库（在 <code>toy-renderer</code> 中）中，都是右手矩阵。使用左右手矩阵绘制的结果是左右镜像对称的。一些交互代码，如通过鼠标移动观察方向，也要对水平方向的处理做相反处理才能得到类似的效果。</p>
 <p>（还有一个不同是，DirectX Math 的透视矩阵得到的深度范围是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">[</mo><mn>0</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[0, 1]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">1</span><span class="mclose">]</span></span></span></span>，我自己的数学库得到的是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">[</mo><mo>−</mo><mn>1</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[-1, 1]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">−</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord">1</span><span class="mclose">]</span></span></span></span>）</p>
 
         <h3 id="变换矩阵的列优先-行优先"   >
-          <a href="#变换矩阵的列优先-行优先" class="heading-link"><i class="fas fa-link"></i></a>变换矩阵的列优先 &amp; 行优先</h3>
+          <a href="#变换矩阵的列优先-行优先" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#变换矩阵的列优先-行优先"></a> 变换矩阵的列优先 &amp; 行优先</h3>
       
 <p>DirectX Math 是行优先（row-major）矩阵，glm、我自己的数学库、GLSL 以及 HLSL 都是列优先（column-major）。</p>
 <p>HLSL 的 <code>mul()</code> 函数，既支持 <code>mul(mat, vec)</code> 也支持 <code>mul(vec, mat)</code>，向量是行向量还是列向量会根据在参数中的位置来决定。</p>
@@ -329,7 +329,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.0.0"></he
 <p>原书代码在 HLSL 还继续使用右乘行向量的方式，但 HLSL 是列优先矩阵，所以原书代码在将矩阵赋值到 Constant Buffer 的结构中是要做转置。但根据我们刚刚的分析，我们如果在 HLSL 使用左乘列向量，就不需要这一次转置。</p>
 
         <h3 id="cmake-win32directx-12"   >
-          <a href="#cmake-win32directx-12" class="heading-link"><i class="fas fa-link"></i></a>CMake + Win32/DirectX 12</h3>
+          <a href="#cmake-win32directx-12" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#cmake-win32directx-12"></a> CMake + Win32/DirectX 12</h3>
       
 <p>众所周知，Win32 程序的入口函数是 <code>WinMain</code> 不是 <code>main</code>（当然，还有 <code>wWinMain</code>，区别是命令行参数是 ASCII 还是 Unicode），这一点通过</p>
 <figure class="highlight cmake"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">set</span>(CMAKE_WIN32_EXECUTABLE <span class="keyword">TRUE</span>)</span><br></pre></td></tr></table></div></figure>
@@ -341,17 +341,17 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.0.0"></he
 <p>还有一点，编译 Win32 程序并不一定要用 MSVC 编译器，像我用的就是 Clang。</p>
 
         <h2 id="一些与原书不同的地方"   >
-          <a href="#一些与原书不同的地方" class="heading-link"><i class="fas fa-link"></i></a>一些与原书不同的地方</h2>
+          <a href="#一些与原书不同的地方" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#一些与原书不同的地方"></a> 一些与原书不同的地方</h2>
       
 
         <h3 id="idxgifactory-idxgiswapchain"   >
-          <a href="#idxgifactory-idxgiswapchain" class="heading-link"><i class="fas fa-link"></i></a>IDXGIFactory &amp; IDXGISwapChain</h3>
+          <a href="#idxgifactory-idxgiswapchain" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#idxgifactory-idxgiswapchain"></a> <code>IDXGIFactory</code> &amp; <code>IDXGISwapChain</code></h3>
       
 <p>原书中使用 <code>IDXGIFactory::CreateSwapChain()</code> 来创建交换链，但官网文档上不推荐使用这种方式，所以修改了关于 <code>IDXGIFactory</code> 和 <code>IDXGISwapChain</code> 的创建部分：</p>
 <figure class="highlight cpp"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// D3DApp.h</span></span><br><span class="line">Microsoft::WRL::ComPtr&lt;IDXGIFactory4&gt; p_dxgi_factory;</span><br><span class="line">Microsoft::WRL::ComPtr&lt;IDXGISwapChain1&gt; p_swap_chain;</span><br><span class="line"></span><br><span class="line"><span class="comment">// D3DApp.cpp</span></span><br><span class="line">ThrowIfFailed(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(&amp;p_dxgi_factory)));</span><br><span class="line"></span><br><span class="line">DXGI_SWAP_CHAIN_DESC1 sc_desc = &#123;&#125;;</span><br><span class="line">sc_desc.Width = client_width;</span><br><span class="line">sc_desc.Height = client_height;</span><br><span class="line">sc_desc.Format = back_buffer_fmt;</span><br><span class="line">sc_desc.SampleDesc.Count = <span class="number">1</span>;</span><br><span class="line">sc_desc.SampleDesc.Quality = <span class="number">0</span>;</span><br><span class="line">sc_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;</span><br><span class="line">sc_desc.BufferCount = kSwapChainBufferCnt;</span><br><span class="line">sc_desc.Scaling = DXGI_SCALING_STRETCH;</span><br><span class="line">sc_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;</span><br><span class="line">sc_desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;</span><br><span class="line">DXGI_SWAP_CHAIN_FULLSCREEN_DESC sc_fs_desc = &#123;&#125;;</span><br><span class="line">sc_fs_desc.Windowed = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">ThrowIfFailed(p_dxgi_factory-&gt;CreateSwapChainForHwnd(p_cmd_queue.Get(), h_win,</span><br><span class="line">    &amp;sc_desc, &amp;sc_fs_desc, <span class="literal">nullptr</span>, &amp;p_swap_chain));</span><br></pre></td></tr></table></div></figure>
 
         <h3 id="directxtk12-加载-dds-材质"   >
-          <a href="#directxtk12-加载-dds-材质" class="heading-link"><i class="fas fa-link"></i></a>DirectXTK12 加载 DDS 材质</h3>
+          <a href="#directxtk12-加载-dds-材质" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#directxtk12-加载-dds-材质"></a> DirectXTK12 加载 DDS 材质</h3>
       
 <p>按原书中的说法，当时还没有 DirectXTK12，所以作者自己魔改了一个。而我在学习的时候，DirectXTK12 是已经有了的，在 GitHub 上就可以找到，所以使用 DirectXTK12。</p>
 <p>只是加载 DDS 材质的话，需要包含以下头文件：</p>
@@ -365,51 +365,51 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.0.0"></he
 <p>其中 <code>upload_finish</code> 的类型是 <code>std::future&lt;void&gt;</code>。</p>
 
         <h2 id="一些其他的"   >
-          <a href="#一些其他的" class="heading-link"><i class="fas fa-link"></i></a>一些其他的</h2>
+          <a href="#一些其他的" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#一些其他的"></a> 一些其他的</h2>
       
 <p>DirectXTK12 的例程，以及一些其他官方例程，它们的代码结构都差不太多的感觉，而且感觉看起来挺舒服的。说不定之后会考虑试一试那样子的写法。以及，之后的代码中应该会更多地使用 <code>d3dx12.h</code> 中的便捷函数来填充 <code>XXX_DESC</code>。</p>
 </div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://pepcy.cf">Pepcy_Ch</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://pepcy.cf/DirectX-12-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/">http://pepcy.cf/DirectX-12-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://pepcy.cf/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://pepcy.cf/tags/CG/">CG</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://pepcy.cf/tags/DirectX12/">DirectX12</a></span></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/%E7%94%A8-Unity-%E5%AD%A6%E4%B9%A0-PBR%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E7%A1%80%E5%92%8C%E5%87%86%E5%A4%87/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">用 Unity 学习 PBR（一）基础和准备</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0-Policy-Iteration-Value-Iteration/"><span class="paginator-prev__text">强化学习 - Policy Iteration &amp; Value Iteration</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AF%8F%E7%AB%A0%E4%BB%A3%E7%A0%81%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">
-          每章代码简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-4-initialization"><span class="toc-number">1.1.</span> <span class="toc-text">
-          chap. 4 - initialization</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-6-drawing-i"><span class="toc-number">1.2.</span> <span class="toc-text">
-          chap. 6 - drawing I</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-7-drawing-ii"><span class="toc-number">1.3.</span> <span class="toc-text">
-          chap. 7 - drawing II</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-8-lighting"><span class="toc-number">1.4.</span> <span class="toc-text">
-          chap. 8 - lighting</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-9-texturing"><span class="toc-number">1.5.</span> <span class="toc-text">
-          chap. 9 - texturing</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-10-blending"><span class="toc-number">1.6.</span> <span class="toc-text">
-          chap. 10 - blending</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-11-stenciling"><span class="toc-number">1.7.</span> <span class="toc-text">
-          chap. 11 - stenciling</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-12-geometry-shader"><span class="toc-number">1.8.</span> <span class="toc-text">
-          chap. 12 - geometry shader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-13-compute-shader"><span class="toc-number">1.9.</span> <span class="toc-text">
-          chap. 13 - compute shader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-14-tessellation"><span class="toc-number">1.10.</span> <span class="toc-text">
-          chap. 14 - tessellation</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#win32-%E7%AA%97%E5%8F%A3"><span class="toc-number">2.</span> <span class="toc-text">
-          Win32 窗口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#directx-12-%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF"><span class="toc-number">3.</span> <span class="toc-text">
-          DirectX 12 渲染管线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#directx-12-%E7%9A%84%E5%85%83%E7%B4%A0"><span class="toc-number">4.</span> <span class="toc-text">
-          DirectX 12 的元素</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#comptrt"><span class="toc-number">4.1.</span> <span class="toc-text">
-          ComPtr&lt;T&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#d3d12-%E8%B0%83%E8%AF%95%E5%B1%82"><span class="toc-number">4.2.</span> <span class="toc-text">
-          D3D12 调试层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#idxgifactory-id3d12device"><span class="toc-number">4.3.</span> <span class="toc-text">
-          IDXGIFactory &amp; ID3D12Device</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#d3d12_xxx_desc"><span class="toc-number">4.4.</span> <span class="toc-text">
-          D3D12_XXX_DESC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#swap-chain"><span class="toc-number">4.5.</span> <span class="toc-text">
-          Swap Chain</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#command-allocator-queue-and-list"><span class="toc-number">4.6.</span> <span class="toc-text">
-          Command Allocator、Queue and List</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fence"><span class="toc-number">4.7.</span> <span class="toc-text">
-          Fence</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%84%E6%BA%90-%E6%8F%8F%E8%BF%B0%E5%AD%90-%E6%8F%8F%E8%BF%B0%E5%AD%90%E5%A0%86"><span class="toc-number">4.8.</span> <span class="toc-text">
-          资源、描述子、描述子堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E7%8A%B6%E6%80%81-barrier"><span class="toc-number">4.9.</span> <span class="toc-text">
-          资源状态 &amp; Barrier</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#vertex-buffer-index-buffer"><span class="toc-number">4.10.</span> <span class="toc-text">
-          Vertex Buffer &amp; Index Buffer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9D%80%E8%89%B2%E5%99%A8shader"><span class="toc-number">4.11.</span> <span class="toc-text">
-          着色器（Shader）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#input-layout"><span class="toc-number">4.12.</span> <span class="toc-text">
-          Input Layout</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B9%E7%AD%BE%E5%90%8D-cbv-srv-uav-static-sampler"><span class="toc-number">4.13.</span> <span class="toc-text">
-          根签名 &amp; CBV、SRV、UAV、Static Sampler</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pipeline-state-objectpso"><span class="toc-number">4.14.</span> <span class="toc-text">
-          Pipeline State Object（PSO）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#directx-12-%E7%9B%B8%E5%85%B3%E7%9A%84%E5%85%B6%E4%BB%96%E5%86%85%E5%AE%B9"><span class="toc-number">5.</span> <span class="toc-text">
-          DirectX 12 相关的其他内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%A7%E8%B5%84%E6%BA%90frame-resource"><span class="toc-number">5.1.</span> <span class="toc-text">
-          帧资源（Frame Resource）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E5%B8%A7%E7%BB%98%E5%88%B6%E6%B5%81%E7%A8%8B"><span class="toc-number">5.2.</span> <span class="toc-text">
-          单帧绘制流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E7%9D%80%E8%89%B2%E5%99%A8"><span class="toc-number">5.3.</span> <span class="toc-text">
-          计算着色器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%86%E5%88%86"><span class="toc-number">5.4.</span> <span class="toc-text">
-          细分</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E5%85%B6%E4%BB%96%E5%86%85%E5%AE%B9"><span class="toc-number">6.</span> <span class="toc-text">
-          代码中的其他内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E6%8D%A2%E7%9F%A9%E9%98%B5%E7%9A%84%E5%B7%A6%E6%89%8B%E7%B3%BB-%E5%8F%B3%E6%89%8B%E7%B3%BB"><span class="toc-number">6.1.</span> <span class="toc-text">
-          变换矩阵的左手系 &amp; 右手系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E6%8D%A2%E7%9F%A9%E9%98%B5%E7%9A%84%E5%88%97%E4%BC%98%E5%85%88-%E8%A1%8C%E4%BC%98%E5%85%88"><span class="toc-number">6.2.</span> <span class="toc-text">
-          变换矩阵的列优先 &amp; 行优先</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cmake-win32directx-12"><span class="toc-number">6.3.</span> <span class="toc-text">
-          CMake + Win32&#x2F;DirectX 12</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E4%B8%8E%E5%8E%9F%E4%B9%A6%E4%B8%8D%E5%90%8C%E7%9A%84%E5%9C%B0%E6%96%B9"><span class="toc-number">7.</span> <span class="toc-text">
-          一些与原书不同的地方</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#idxgifactory-idxgiswapchain"><span class="toc-number">7.1.</span> <span class="toc-text">
-          IDXGIFactory &amp; IDXGISwapChain</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#directxtk12-%E5%8A%A0%E8%BD%BD-dds-%E6%9D%90%E8%B4%A8"><span class="toc-number">7.2.</span> <span class="toc-text">
-          DirectXTK12 加载 DDS 材质</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%85%B6%E4%BB%96%E7%9A%84"><span class="toc-number">8.</span> <span class="toc-text">
-          一些其他的</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/assets/avatar.jpg" alt="avatar"></div><p class="sidebar-ov-author__text">Pepcy CHEN</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/PepcyCh" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://www.zhihu.com/people/pepcy-chen" target="_blank" rel="noopener" data-popover="知乎" data-popover-pos="up"><span class="sidebar-ov-social-item__icon">知</span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">189</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">6</div><div class="sidebar-ov-state-item__name">分类</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">128</div><div class="sidebar-ov-state-item__name">标签</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2017~2021</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Pepcy_Ch</span></div><div><span>由 <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a> 强力驱动</span><span> v5.0.0</span><span class="footer__devider">|</span><span>主题 - <a href="https://github.com/liuyib/hexo-theme-stun/" title="Stun" target="_blank" rel="noopener">Stun</a></span><span> v2.6.2</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><div class="search-mask"></div><div class="search-popup"><span class="search-close"></span><div class="search-input"><input placeholder="搜索文章（支持多关键词，请用空格分隔）"></div><div class="search-results"></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script>function initSearch() {
+           每章代码简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-4-initialization"><span class="toc-number">1.1.</span> <span class="toc-text">
+           chap. 4 - initialization</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-6-drawing-i"><span class="toc-number">1.2.</span> <span class="toc-text">
+           chap. 6 - drawing I</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-7-drawing-ii"><span class="toc-number">1.3.</span> <span class="toc-text">
+           chap. 7 - drawing II</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-8-lighting"><span class="toc-number">1.4.</span> <span class="toc-text">
+           chap. 8 - lighting</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-9-texturing"><span class="toc-number">1.5.</span> <span class="toc-text">
+           chap. 9 - texturing</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-10-blending"><span class="toc-number">1.6.</span> <span class="toc-text">
+           chap. 10 - blending</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-11-stenciling"><span class="toc-number">1.7.</span> <span class="toc-text">
+           chap. 11 - stenciling</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-12-geometry-shader"><span class="toc-number">1.8.</span> <span class="toc-text">
+           chap. 12 - geometry shader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-13-compute-shader"><span class="toc-number">1.9.</span> <span class="toc-text">
+           chap. 13 - compute shader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#chap-14-tessellation"><span class="toc-number">1.10.</span> <span class="toc-text">
+           chap. 14 - tessellation</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#win32-%E7%AA%97%E5%8F%A3"><span class="toc-number">2.</span> <span class="toc-text">
+           Win32 窗口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#directx-12-%E6%B8%B2%E6%9F%93%E7%AE%A1%E7%BA%BF"><span class="toc-number">3.</span> <span class="toc-text">
+           DirectX 12 渲染管线</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#directx-12-%E7%9A%84%E5%85%83%E7%B4%A0"><span class="toc-number">4.</span> <span class="toc-text">
+           DirectX 12 的元素</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#comptrt"><span class="toc-number">4.1.</span> <span class="toc-text">
+           ComPtr&lt;T&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#d3d12-%E8%B0%83%E8%AF%95%E5%B1%82"><span class="toc-number">4.2.</span> <span class="toc-text">
+           D3D12 调试层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#idxgifactory-id3d12device"><span class="toc-number">4.3.</span> <span class="toc-text">
+           IDXGIFactory &amp; ID3D12Device</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#d3d12_xxx_desc"><span class="toc-number">4.4.</span> <span class="toc-text">
+           D3D12_XXX_DESC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#swap-chain"><span class="toc-number">4.5.</span> <span class="toc-text">
+           Swap Chain</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#command-allocator-queue-and-list"><span class="toc-number">4.6.</span> <span class="toc-text">
+           Command Allocator、Queue and List</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fence"><span class="toc-number">4.7.</span> <span class="toc-text">
+           Fence</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%84%E6%BA%90-%E6%8F%8F%E8%BF%B0%E5%AD%90-%E6%8F%8F%E8%BF%B0%E5%AD%90%E5%A0%86"><span class="toc-number">4.8.</span> <span class="toc-text">
+           资源、描述子、描述子堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E7%8A%B6%E6%80%81-barrier"><span class="toc-number">4.9.</span> <span class="toc-text">
+           资源状态 &amp; Barrier</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#vertex-buffer-index-buffer"><span class="toc-number">4.10.</span> <span class="toc-text">
+           Vertex Buffer &amp; Index Buffer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9D%80%E8%89%B2%E5%99%A8shader"><span class="toc-number">4.11.</span> <span class="toc-text">
+           着色器（Shader）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#input-layout"><span class="toc-number">4.12.</span> <span class="toc-text">
+           Input Layout</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B9%E7%AD%BE%E5%90%8D-cbv-srv-uav-static-sampler"><span class="toc-number">4.13.</span> <span class="toc-text">
+           根签名 &amp; CBV、SRV、UAV、Static Sampler</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pipeline-state-objectpso"><span class="toc-number">4.14.</span> <span class="toc-text">
+           Pipeline State Object（PSO）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#directx-12-%E7%9B%B8%E5%85%B3%E7%9A%84%E5%85%B6%E4%BB%96%E5%86%85%E5%AE%B9"><span class="toc-number">5.</span> <span class="toc-text">
+           DirectX 12 相关的其他内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%A7%E8%B5%84%E6%BA%90frame-resource"><span class="toc-number">5.1.</span> <span class="toc-text">
+           帧资源（Frame Resource）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%95%E5%B8%A7%E7%BB%98%E5%88%B6%E6%B5%81%E7%A8%8B"><span class="toc-number">5.2.</span> <span class="toc-text">
+           单帧绘制流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E7%9D%80%E8%89%B2%E5%99%A8"><span class="toc-number">5.3.</span> <span class="toc-text">
+           计算着色器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%86%E5%88%86"><span class="toc-number">5.4.</span> <span class="toc-text">
+           细分</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E4%B8%AD%E7%9A%84%E5%85%B6%E4%BB%96%E5%86%85%E5%AE%B9"><span class="toc-number">6.</span> <span class="toc-text">
+           代码中的其他内容</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E6%8D%A2%E7%9F%A9%E9%98%B5%E7%9A%84%E5%B7%A6%E6%89%8B%E7%B3%BB-%E5%8F%B3%E6%89%8B%E7%B3%BB"><span class="toc-number">6.1.</span> <span class="toc-text">
+           变换矩阵的左手系 &amp; 右手系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E6%8D%A2%E7%9F%A9%E9%98%B5%E7%9A%84%E5%88%97%E4%BC%98%E5%85%88-%E8%A1%8C%E4%BC%98%E5%85%88"><span class="toc-number">6.2.</span> <span class="toc-text">
+           变换矩阵的列优先 &amp; 行优先</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cmake-win32directx-12"><span class="toc-number">6.3.</span> <span class="toc-text">
+           CMake + Win32&#x2F;DirectX 12</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E4%B8%8E%E5%8E%9F%E4%B9%A6%E4%B8%8D%E5%90%8C%E7%9A%84%E5%9C%B0%E6%96%B9"><span class="toc-number">7.</span> <span class="toc-text">
+           一些与原书不同的地方</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#idxgifactory-idxgiswapchain"><span class="toc-number">7.1.</span> <span class="toc-text">
+           IDXGIFactory &amp; IDXGISwapChain</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#directxtk12-%E5%8A%A0%E8%BD%BD-dds-%E6%9D%90%E8%B4%A8"><span class="toc-number">7.2.</span> <span class="toc-text">
+           DirectXTK12 加载 DDS 材质</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%85%B6%E4%BB%96%E7%9A%84"><span class="toc-number">8.</span> <span class="toc-text">
+           一些其他的</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/assets/avatar.jpg" alt="avatar"></div><p class="sidebar-ov-author__text">Pepcy CHEN</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/PepcyCh" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://www.zhihu.com/people/pepcy-chen" target="_blank" rel="noopener" data-popover="知乎" data-popover-pos="up"><span class="sidebar-ov-social-item__icon">知</span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">189</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">6</div><div class="sidebar-ov-state-item__name">分类</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">128</div><div class="sidebar-ov-state-item__name">标签</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2017~2021</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Pepcy_Ch</span></div><div><span>由 <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a> 强力驱动</span><span> v5.0.0</span><span class="footer__devider">|</span><span>主题 - <a href="https://github.com/liuyib/hexo-theme-stun/" title="Stun" target="_blank" rel="noopener">Stun</a></span><span> v2.6.2</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><div class="search-mask"></div><div class="search-popup"><span class="search-close"></span><div class="search-input"><input placeholder="搜索文章（支持多关键词，请用空格分隔）"></div><div class="search-results"></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script>function initSearch() {
   var isXML = true;
   var search_path = 'search.json';
 
