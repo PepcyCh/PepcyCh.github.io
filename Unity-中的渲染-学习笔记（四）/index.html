@@ -1,0 +1,571 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/assets/favicon.png?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/assets/favicon.png?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="CatLikeCoding 上的诸多 Unity 系列教程中，关于 Unity 的渲染相关实现的教程的学习笔记，原教程用 20 节讲述了 Unity 自己的渲染相关的一些具体细节。本文是其中 13~17 节的学习笔记，此 5 节的标题依次为：  13 - Deferred Shading 14 - Fog 15 - Deferred Lighting 16 - Static Lighting 17">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unity 中的渲染 学习笔记（四）">
+<meta property="og:url" content="http://pepcy.cf/Unity-%E4%B8%AD%E7%9A%84%E6%B8%B2%E6%9F%93-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89/index.html">
+<meta property="og:site_name" content="PepcyCh&#39;s Blog">
+<meta property="og:description" content="CatLikeCoding 上的诸多 Unity 系列教程中，关于 Unity 的渲染相关实现的教程的学习笔记，原教程用 20 节讲述了 Unity 自己的渲染相关的一些具体细节。本文是其中 13~17 节的学习笔记，此 5 节的标题依次为：  13 - Deferred Shading 14 - Fog 15 - Deferred Lighting 16 - Static Lighting 17">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-03-04T08:18:32.000Z">
+<meta property="article:modified_time" content="2021-03-04T08:20:39.847Z">
+<meta property="article:author" content="Pepcy_Ch">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="CG">
+<meta property="article:tag" content="Unity">
+<meta name="twitter:card" content="summary"><title>Unity 中的渲染 学习笔记（四） | PepcyCh's Blog</title><link ref="canonical" href="http://pepcy.cf/Unity-%E4%B8%AD%E7%9A%84%E6%B8%B2%E6%9F%93-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><link rel="dns-prefetch" href="https://www.googletagmanager.com"><script src="https://www.googletagmanager.com/gtag/js?id=UA-102451976-1" async=""></script><script>if (window.location.hostname !== 'localhost') {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'UA-102451976-1');
+}</script><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"default","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.0.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">标签</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/about"><span class="header-nav-menu-item__icon"><i class="fas fa-user"></i></span><span class="header-nav-menu-item__text">关于</span></a></div></div><div class="header-nav-search"><span class="header-nav-search__icon"><i class="fas fa-search"></i></span><span class="header-nav-search__text">搜索</span></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">PepcyCh's Blog</div><div class="header-banner-info__subtitle"></div></div><div class="header-banner-arrow"><div class="header-banner-arrow__icon"><i class="fas fa-angle-down"></i></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">Unity 中的渲染 学习笔记（四）</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-03-04</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-03-04</span></span></div></header><div class="post-body"><p>CatLikeCoding 上的诸多 Unity 系列教程中，关于 Unity 的渲染相关实现的教程的学习笔记，原教程用 20 节讲述了 Unity 自己的渲染相关的一些具体细节。本文是其中 13~17 节的学习笔记，此 5 节的标题依次为：</p>
+<ul>
+<li>13 - Deferred Shading</li>
+<li>14 - Fog</li>
+<li>15 - Deferred Lighting</li>
+<li>16 - Static Lighting</li>
+<li>17 - Mixed Lighting</li>
+</ul>
+<p>原教程及其他参考：</p>
+<ul>
+<li><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://catlikecoding.com/unity/tutorials/rendering/" >Unity Rendering Tutorial</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></li>
+<li><span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://github.com/TwoTailsGames/Unity-Built-in-Shaders" >Unity-Build-in-Shaders</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></li>
+</ul>
+<a id="more"></a>
+
+        <h2 id="13-deferred-shading"   >
+          <a href="#13-deferred-shading" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#13-deferred-shading"></a> 13 Deferred Shading</h2>
+      
+
+        <h3 id="正向渲染与延迟渲染的绘制顺序差异"   >
+          <a href="#正向渲染与延迟渲染的绘制顺序差异" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#正向渲染与延迟渲染的绘制顺序差异"></a> 正向渲染与延迟渲染的绘制顺序差异</h3>
+      
+<p>二者的绘制顺序大致是：</p>
+<p>正向渲染</p>
+<ol>
+<li>从摄像机绘制深度</li>
+<li>阴影</li>
+<li>不透明物体的 Forward Base 与 Forward Add</li>
+<li>天空盒</li>
+<li>透明物体的 Forward Base 与 Forward Add</li>
+<li>后处理</li>
+</ol>
+<p>延迟渲染</p>
+<ol>
+<li>G-Buffer</li>
+<li>前向不透明物体深度</li>
+<li>处理深度</li>
+<li>反射</li>
+<li>光照</li>
+<li>阴影</li>
+<li>天空盒</li>
+<li>透明物体的 Forward Base 与 Forward Add</li>
+<li>后处理</li>
+</ol>
+
+        <h3 id="g-buffer"   >
+          <a href="#g-buffer" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#g-buffer"></a> G-Buffer</h3>
+      
+<p>使用 4 个输出</p>
+<ul>
+<li>ARGB32，RGB - 反照率，A - 遮蔽</li>
+<li>ARGB32，RGB - 镜面反射颜色，A - 光滑度</li>
+<li>ARGB2101010，RGB - 法线（值域移至 [0, 1] 的），A - 未使用</li>
+<li>ARGB2101010（LDR 摄像机）/ ARGBHalf（HDR 摄像机），RGB - 累积光照，一开始为环境光与自发光</li>
+</ul>
+<p>（深度模板的那个输出还是会有的）</p>
+<p>在 LDR 摄像机中，Unity 期望结果（G-Buffer 中的最后一项）使用对数编码的 LDR 以得到更好的动态范围，若原本的颜色为 C，则转换为 2<sup>-C</sup>（要手动转换，<code>UNITY_HDR_ON</code> 关键字表明了使用 HDR 摄像机，否则是 LDR 摄像机），Unity 会在最后转换回来。（但为什么这样会有更好的动态范围，大概查了查也没查到东西。。。）</p>
+
+        <h3 id="延迟渲染与反射"   >
+          <a href="#延迟渲染与反射" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#延迟渲染与反射"></a> 延迟渲染与反射</h3>
+      
+<p>在正向渲染中，反射探针相关的内容（使用哪个反射探针，混合系数是多少）是对每个物体计算的，而在延迟渲染中，因为在 G-Buffer 中我们并不知道一个像素来自哪一个物体，我们不可能像正向渲染那样使用反射探针。关于这个问题，有两种方案。</p>
+<p>第一种解决方案是根本不使用延迟反射，在渲染 G-Buffer 的那个 pass 中，就直接把反射相关的内容绘制到 G-Buffer 的最后一项中。这样和正向渲染的结果是一样的。如果不使用这种做法而使用延迟反射的话，渲染 G-Buffer 的 pass 中，立方体贴图会是纯黑色。（原教程中在最后把 <code>indirectLight.specular</code> 赋为 0，应该是让编译器发现之前的复制都白做了来消除掉多余的采样）</p>
+<p>另一种方案是，在渲染 G-Buffer 的那个 pass 中不管非直接光照的反射项，使用单独的 pass 做延迟反射。对于天空盒的反射，绘制屏幕四边形做反射；对于反射探针，绘制反射探针的立方体盒，在盒内的像素使用该探针的数据绘制，后绘制的反射探针盒会覆盖之前绘制的。不过，在延迟反射中，反射探针会有一个叫“混合距离”的参数，会把盒向外扩展一定距离作为淡出混合的部分（该参数也会影响盒投影的结果），落于此范围内的像素可能会混合多于两个反射探针的结果。</p>
+<p>（从 G-Buffer 中获取内容计算光照的部分在第 15 节）</p>
+
+        <h2 id="14-fog"   >
+          <a href="#14-fog" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#14-fog"></a> 14 Fog</h2>
+      
+
+        <h3 id="不同种类的雾"   >
+          <a href="#不同种类的雾" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#不同种类的雾"></a> 不同种类的雾</h3>
+      
+<p><code>multi_compile_fog</code> 提供对应关键字的着色器变体（或没有表示没有开启雾）。</p>
+<ul>
+<li>线性（<code>FOG_LINEAR</code>）：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo>=</mo><mo stretchy="false">(</mo><mi>E</mi><mo>−</mo><mi>c</mi><mo stretchy="false">)</mo><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><mi>E</mi><mo>−</mo><mi>S</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">f = (E - c) / (E - S)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">c</span><span class="mclose">)</span><span class="mord">/</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mclose">)</span></span></span></span>（<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi></mrow><annotation encoding="application/x-tex">S</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span></span></span></span> 和 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>E</mi></mrow><annotation encoding="application/x-tex">E</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span></span></span></span> 分别为衰减起始和衰减结束的位置，<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>c</mi></mrow><annotation encoding="application/x-tex">c</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">c</span></span></span></span> 为雾坐标（见后））</li>
+<li>指数（<code>FOG_EXP</code>）：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo>=</mo><msup><mn>2</mn><mrow><mo>−</mo><mi>c</mi><mi>d</mi></mrow></msup></mrow><annotation encoding="application/x-tex">f = 2^{-cd}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8491079999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight">d</span></span></span></span></span></span></span></span></span></span></span></span>（<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>d</mi></mrow><annotation encoding="application/x-tex">d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault">d</span></span></span></span> 为雾密度，越大表现出雾越浓）</li>
+<li>指数平方（<code>FOG_EXP2</code>）：<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>f</mi><mo>=</mo><msup><mn>2</mn><mrow><mo>−</mo><mo stretchy="false">(</mo><mi>c</mi><mi>d</mi><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow></msup></mrow><annotation encoding="application/x-tex">f = 2^{-(cd)^2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8888799999999999em;vertical-align:-0.19444em;"></span><span class="mord mathdefault" style="margin-right:0.10764em;">f</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.9869199999999998em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9869199999999998em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mopen mtight">(</span><span class="mord mathdefault mtight">c</span><span class="mord mathdefault mtight">d</span><span class="mclose mtight"><span class="mclose mtight">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913142857142857em;"><span style="top:-2.931em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></li>
+</ul>
+<p>Unity 提供了 <code>UNITY_CALC_FOG_FACTOR_RAW(coord)</code> 来计算雾的系数。</p>
+<figure class="highlight c"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(FOG_LINEAR)</span></span><br><span class="line">    <span class="comment">// factor = (end-z)/(end-start) = z * (-1/(end-start)) + (end/(end-start))</span></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">define</span> UNITY_CALC_FOG_FACTOR_RAW(coord) float unityFogFactor = (coord) * unity_FogParams.z + unity_FogParams.w</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">elif</span> defined(FOG_EXP)</span></span><br><span class="line">    <span class="comment">// factor = exp(-density*z)</span></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">define</span> UNITY_CALC_FOG_FACTOR_RAW(coord) float unityFogFactor = unity_FogParams.y * (coord); unityFogFactor = exp2(-unityFogFactor)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">elif</span> defined(FOG_EXP2)</span></span><br><span class="line">    <span class="comment">// factor = exp(-(density*z)^2)</span></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">define</span> UNITY_CALC_FOG_FACTOR_RAW(coord) float unityFogFactor = unity_FogParams.x * (coord); unityFogFactor = exp2(-unityFogFactor*unityFogFactor)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">define</span> UNITY_CALC_FOG_FACTOR_RAW(coord) float unityFogFactor = 0.0</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></div></figure>
+<p>用得到的系数在雾颜色或黑色（为了避免多个光源时雾颜色被重复计算，只在 Forward Base 中使用雾颜色，否则使用黑色）和计算出的光照颜色之间插值（要特殊处理没有开启雾的情况）。</p>
+<p>（这个宏定义感觉非常的迷，没有开启雾的值和开启雾的值居然不能统一处理。。。）</p>
+
+        <h3 id="雾坐标"   >
+          <a href="#雾坐标" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#雾坐标"></a> 雾坐标</h3>
+      
+<p>雾坐标可以使用像素到摄像机的距离或像素的线性深度（？就是透视除法前的那个），Unity 使用后者，并使用宏 <code>UNITY_Z_0_FAR_FROM_CLIPSPACE</code> 来处理不同透视投影矩阵下不同的 z 的范围（主要是处理反 z）。</p>
+
+        <h3 id="延迟渲染中的雾"   >
+          <a href="#延迟渲染中的雾" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#延迟渲染中的雾"></a> 延迟渲染中的雾</h3>
+      
+<p>要在延迟渲染中实现雾的效果，需要一个额外的后处理 pass，通过向摄像机添加一个 C# 脚本组件、实现 <code>OnRenderImage</code> 方法实现。同时需要一个单独的后处理着色器。</p>
+<p>在延迟雾的后处理着色器中，从延迟渲染结果纹理（<code>_MainTex</code> 属性）中采样颜色，从摄像机深度图（<code>_CameraDepthTexture</code>，不需要定义在属性中）中采样深度并转化为线性深度，就可以像正向渲染中那样处理雾了。其中深度的转换，Unity 提供了函数 <code>Linear01Depth(depth)</code> 来实现，其中 <code>_ZBufferParams</code> 的 x 为 1 - far / near，y 为 far / near。</p>
+<figure class="highlight c"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Z buffer to linear 0..1 depth</span></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">float</span> <span class="title">Linear01Depth</span><span class="params">( <span class="keyword">float</span> z )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1.0</span> / (_ZBufferParams.x * z + _ZBufferParams.y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+<p>把 01 线性深度转为正向渲染的那个线性深度时，原教程先后使用了直接乘上 far 和乘上 far 再减去 near，我个人觉得前者更有道理一些，把范围搞到了希望的 [0, far] 上，原教程之所以会有区别，猜测是其正向渲染的目标得到的深度范围是 [-near, far]，<code>UNITY_Z_0_FAR_FROM_CLIPSPACE</code> 认为此种情况应当修正但为了效率没有修。</p>
+<p>按以上方式得到的雾会有一些问题，这些问题及其解决如下：</p>
+<ul>
+<li>因为透明物体不写入深度，它们可能会被雾遮住 -&gt; 为 <code>OnRenderImage</code> 添加 <code>ImageEffectOpaque</code> 属性，让其在绘制透明物体前绘制雾（不过这样透明物体上就没有雾了）</li>
+<li>天空盒也被影响了 -&gt; 当 01 深度足够大时，设置 <code>unityFogFactor</code> 为 1</li>
+<li>关闭雾时显示为全雾 -&gt; 用宏判断，在无雾时设置 <code>unityFogFactor</code> 为 1（所以说这个没有开启雾的值和开启雾的值居然不能统一处理的设定就好奇怪啊。。。）</li>
+</ul>
+
+        <h2 id="15-deferred-lights"   >
+          <a href="#15-deferred-lights" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#15-deferred-lights"></a> 15 Deferred Lights</h2>
+      
+
+        <h3 id="ldr-颜色后处理"   >
+          <a href="#ldr-颜色后处理" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#ldr-颜色后处理"></a> LDR 颜色后处理</h3>
+      
+<p>如第 13 节中所说，LDR 摄像机会使用对数编码，我们需要一个额外的 pass 来转换回来。而 Unity 要求的延迟着色着色器需要有 2 个 pass，其中第二个 pass 就是处理这个用的。</p>
+<p>为了减少运算，我们不需要在天空盒的位置转换，所以 Unity 在这之前对所有的物体又进行了一次绘制，只写模板，在做转换时只在模板匹配上的位置做。</p>
+<p>可能需要在 ShaderLab 的 pass 中写入一些内容来搞模板相关的设置：</p>
+<figure class="highlight plain"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Pass</span><br><span class="line">&#123;</span><br><span class="line">    Cull Off</span><br><span class="line">    ZTest Always</span><br><span class="line">    ZWrite Off</span><br><span class="line">    Stencil</span><br><span class="line">    &#123;</span><br><span class="line">        Ref [_StencilNonBackground]</span><br><span class="line">        ReadMask [_StencilNonBackground]</span><br><span class="line">        CompBack Equal</span><br><span class="line">        CompFront Equal</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+<p>在转换时，需要用到已经绘制好的内容，在 <code>_LightBuffer</code> 2D 纹理中。</p>
+
+        <h3 id="定向光"   >
+          <a href="#定向光" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#定向光"></a> 定向光</h3>
+      
+<p>在定向光的延迟光照中，Unity 会输入给顶点着色器的值是 <code>POSITION</code> 与 <code>NORMAL</code>，前者就是屏幕四边形的四个点（xy 坐标为 0 或 1），后者是摄像机到四边形顶点的向量。</p>
+<p>因为这样，我们需要自己搞出屏幕坐标，Unity 提供了 <code>ComputeScreenPos</code> 来从裁剪空间的坐标（xy 为 -1 或 1）转换到屏幕坐标，其中 <code>_ProjectionParams.x</code> 是 1 或 -1，来解决 uv 起点在左上角或左下角的区别。（原教程说这样得到的是齐次坐标，不过这个摄像机的投影矩阵（？）得到的 w 看起来是 1 的样子）</p>
+<figure class="highlight c"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> float4 <span class="title">ComputeNonStereoScreenPos</span><span class="params">(float4 pos)</span> </span>&#123;</span><br><span class="line">    float4 o = pos * <span class="number">0.5f</span>;</span><br><span class="line">    o.xy = float2(o.x, o.y*_ProjectionParams.x) + o.w;</span><br><span class="line">    o.zw = pos.zw;</span><br><span class="line">    <span class="keyword">return</span> o;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> float4 <span class="title">ComputeScreenPos</span><span class="params">(float4 pos)</span> </span>&#123;</span><br><span class="line">    float4 o = ComputeNonStereoScreenPos(pos);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(UNITY_SINGLE_PASS_STEREO)</span></span><br><span class="line">    o.xy = TransformStereoScreenSpaceTex(o.xy, pos.w);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">    <span class="keyword">return</span> o;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+<p>之后就可以用得到的屏幕坐标在 G-Buffer（<code>_CameraGBufferTexture0</code> 到 <code>_CameraGBufferTexture2</code>，最后一张应该不用采样，而是作为了后续的渲染的目标的样子）中采样了。</p>
+<p>为了计算光照，还需要从深度得到世界空间坐标，输入的 <code>NORMAL</code> 就是用来做这个的。我们在片段着色器的输入中得到了摄像机到屏幕四边形上正要绘制的像素的向量，将其延长到摄像机远平面，再乘上 01 线性深度，就得到了观察坐标下的位置，之后乘上观察矩阵的逆矩阵就得到世界坐标的位置。</p>
+<figure class="highlight c"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">float</span> depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, uv);</span><br><span class="line">depth = Linear01Depth(depth);</span><br><span class="line">float3 rayToFarPlane = fin.ray * _ProjectionParams.z / fin.ray.z;</span><br><span class="line">float3 viewPos = rayToFarPlane * depth;</span><br><span class="line">float3 worldPos = mul(unity_CameraToWorld, float4(viewPos, <span class="number">1</span>)).xyz;</span><br><span class="line">float3 viewDir = normalize(_WorldSpaceCameraPos.xyz - worldPos);</span><br></pre></td></tr></table></div></figure>
+<p><code>UNITY_BRDF_PBS</code> 的参数中，我们需要的反照率、反射光着色、光滑度、法向已经从 G-Buffer 中读出来了，视线方向刚刚也算了出来，还需要 1 减反射率、直接光信息和间接光信息。</p>
+<p>1 减反射率，我们之前是通过金属度和反照率得到的，但金属度并没有存在 G-Buffer 里。Unity 使用 <code>SpecularStrength(specular)</code> 来得到反射率，其返回反射光着色 RGB 中的最大值。这样得到的结果与正向渲染并不相同（比如纯金属本来反射率为 1，延迟渲染中却可能有一些漫反射项），不过可能是一个可以接受的取舍（相比于存储在 G-Buffer 里）。</p>
+<p>直接光信息在变量 <code>_LightColor</code> 和 <code>_LightDir</code> 中，与正向渲染不同，<code>_LightDir</code> 这里真的是光的方向（<code>_WorldSpaceLightPos0.xyz</code> 是反向的光的方向，因为我们计算光照时需要的就是反向的光源方向），不知道为什么这样设计。</p>
+<p>间接光在绘制 G-Buffer 的 pass 和延迟反射中绘制完了，这里不再需要。</p>
+<p>定向光阴影比较好搞，因为是使用屏幕空间阴影贴图，直接从其中（<code>_ShadowMapTexture</code>）采样并作为衰减系数乘在直接光的颜色中即可。不过 Unity 做了一些额外的工作：在阴影范围的边界处，为了避免出现生硬的分界线，Unity 在边界处对阴影做了淡出的效果，如下（<code>unity_ShadowFadeCenterAndType.w</code> 是 0 或 1）：</p>
+<figure class="highlight c"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// in custom shader, CreateLight</span></span><br><span class="line">shadowAtten = tex2D(_ShadowMapTexture, uv).r;</span><br><span class="line"><span class="keyword">float</span> shadowFadeDistance = UnityComputeShadowFadeDistance(worldPos, viewZ);</span><br><span class="line"><span class="keyword">float</span> shadowFade = UnityComputeShadowFade(shadowFadeDistance);</span><br><span class="line">shadowAtten = saturate(shadowAtten + shadowFade);</span><br><span class="line"></span><br><span class="line"><span class="comment">// in Unity built-in shader</span></span><br><span class="line"><span class="function"><span class="keyword">float</span> <span class="title">UnityComputeShadowFadeDistance</span><span class="params">(float3 wpos, <span class="keyword">float</span> z)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">float</span> sphereDist = distance(wpos, unity_ShadowFadeCenterAndType.xyz);</span><br><span class="line">    <span class="keyword">return</span> lerp(z, sphereDist, unity_ShadowFadeCenterAndType.w);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">half <span class="title">UnityComputeShadowFade</span><span class="params">(<span class="keyword">float</span> fadeDist)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> saturate(fadeDist * _LightShadowData.z + _LightShadowData.w);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+<p>为了支持光照蒙版（cookie），我们需要把点转换到光照坐标，采样 cookie 纹理（<code>_LightTexture0</code>）的 A 通道乘在得到的衰减项中。有人发现，当相邻像素的实际坐标相差太大时，会选一个较低的 mipmap 级，Unity 为了解决这个问题，使用了如下的技巧。</p>
+<figure class="highlight c"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> DIRECTIONAL_COOKIE</span></span><br><span class="line">    float2 uvCookie = mul(unity_WorldToLight, float4(worldPos, <span class="number">1</span>)).xy;</span><br><span class="line">    atten *= tex2Dbias(_LightTexture0, float4(uvCookie, <span class="number">0</span>, <span class="number">-8</span>)).a;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></div></figure>
+<p>为了支持 Unity 在 LDR 摄像机下的对数编码，我们首先修改输出为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>2</mn><mrow><mo>−</mo><mi>C</mi></mrow></msup></mrow><annotation encoding="application/x-tex">2^{-C}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathdefault mtight" style="margin-right:0.07153em;">C</span></span></span></span></span></span></span></span></span></span></span></span>，再把混合模式设为 <code>Blend [_SrcBlend] [_DstBlend]</code>，因为 LDR 下会使用与 HDR 不同的混合模式 <code>Blend DstColor Zero</code>，相当于把新旧结果相乘写入到目标里，因为 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><msup><mn>2</mn><mrow><mo>−</mo><mo stretchy="false">(</mo><msub><mi>C</mi><mn>1</mn></msub><mo>+</mo><msub><mi>C</mi><mn>2</mn></msub><mo stretchy="false">)</mo></mrow></msup><mo>=</mo><msup><mn>2</mn><mrow><mo>−</mo><msub><mi>C</mi><mn>1</mn></msub></mrow></msup><mo>×</mo><msup><mn>2</mn><mrow><mo>−</mo><msub><mi>C</mi><mn>2</mn></msub></mrow></msup></mrow><annotation encoding="application/x-tex">2^{-(C_1 + C_2)} = 2^{-C_1} \times 2^{-C_2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8879999999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8879999999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mopen mtight">(</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31731428571428577em;"><span style="top:-2.357em;margin-left:-0.07153em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mbin mtight">+</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31731428571428577em;"><span style="top:-2.357em;margin-left:-0.07153em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.924661em;vertical-align:-0.08333em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31731428571428577em;"><span style="top:-2.357em;margin-left:-0.07153em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.8413309999999999em;vertical-align:0em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.07153em;">C</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31731428571428577em;"><span style="top:-2.357em;margin-left:-0.07153em;margin-right:0.07142857142857144em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span>。</p>
+
+        <h3 id="聚光"   >
+          <a href="#聚光" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#聚光"></a> 聚光</h3>
+      
+<p>因为聚光影响的范围一般远没有整个屏幕那么大，Unity 绘制一个正四棱锥作为聚光的范围，开启小于等于的深度测试与背面剔除，在绘制到的像素上计算延迟光照。不过，这种做法存在一个问题，因为是剔除背面，当该正四棱锥与摄像机近平面相交时，会少绘制一些像素，解决方法是在此时做正面剔除和大于的深度测试。</p>
+<p>聚光的衰减项包含两项，根据距离的衰减与光照 cookie，前者在 <code>_LightTextureB0</code> 中采样，后者在 <code>_LightTexture0</code> 中采样，就像在第 5 节说的那样。因为此时转换到光源空间的矩阵是透视的，所以要手动做透视除法。</p>
+<p>聚光的阴影项直接使用会处理软硬阴影的 <code>UnitySampleShadowmap</code> 函数，应该在第 7 节中说过了。</p>
+
+        <h3 id="点光"   >
+          <a href="#点光" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#点光"></a> 点光</h3>
+      
+<p>与聚光类似，Unity 绘制一个几何球作为点光的范围进行延迟光照。</p>
+<p>衰减与阴影也依旧和第 5 节、第 7 节说的差不多。不过有一点是，第 5 节时给出的 Unity 着色器代码中，无 cookie 的点光的衰减贴图使用 <code>_LightTexture0</code>，有 cookie 的点光和聚光则使用 <code>_LightTextureB0</code>；但是在这里，发现二者都在使用 <code>_LightTextureB0</code>。</p>
+
+        <h3 id="避免不必要的阴影采样"   >
+          <a href="#避免不必要的阴影采样" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#避免不必要的阴影采样"></a> 避免不必要的阴影采样</h3>
+      
+<p>原教程的最后给出了这样的代码：</p>
+<figure class="highlight c"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (shadowed) &#123;</span><br><span class="line">    <span class="keyword">float</span> shadowFadeDistance = UnityComputeShadowFadeDistance(worldPos, viewZ);</span><br><span class="line">    <span class="keyword">float</span> shadowFade = UnityComputeShadowFade(shadowFadeDistance);</span><br><span class="line">    shadowAtten = saturate(shadowAtten + shadowFade);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(UNITY_FAST_COHERENT_DYNAMIC_BRANCHING) &amp;&amp; defined(SHADOWS_SOFT)</span></span><br><span class="line">    UNITY_BRANCH</span><br><span class="line">    <span class="keyword">if</span> (shadowFade &gt; <span class="number">0.99</span>) &#123;</span><br><span class="line">        shadowAtten = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+<p>也就是说，当因为阴影淡出的缘故，像素已经基本不表现为有阴影时，直接对阴影项置 1，让编译器优化掉阴影贴图的采样。原教程只对聚光和点光的软阴影做了处理，Unity 中还额外有一个判断 <code>!defined(LIGHTMAP_SHADOW_MIXING)</code>。</p>
+<p>其中 <code>UNITY_FAST_COHERENT_DYNAMIC_BRANCHING</code> 的“coherent dynamic branching”是指，虽然分支条件的结果不是 uniform 的，但在相邻的像素之间存在相关性，这样的分支在一些硬件上也不会产生过大的效率损失。一般来说，如果一定要在着色器里出现分支，那代价从低到高分别是 uniform(static)、coherent(invariant) dynamic、incoherent(variant) dynamic。（<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/122467342" >Shader中的 if 和分支 - 知乎</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>）</p>
+
+        <h2 id="16-static-lighting"   >
+          <a href="#16-static-lighting" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#16-static-lighting"></a> 16 Static Lighting</h2>
+      
+
+        <h3 id="光照贴图light-map"   >
+          <a href="#光照贴图light-map" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#光照贴图light-map"></a> 光照贴图（Light Map）</h3>
+      
+<p>当光源与物体都是静态时，可以使用预烘培的光照贴图进行光照。使用实时计算还是光照贴图的设置在光源上。</p>
+<p>我在写这篇笔记时，使用的 Unity 2019.4 有三种 lightmapper：enlighten、progressive（CPU）和 progressive（GPU），原教程使用的 enlighten lightmapper 是基于预计算的实时 GI 信息来计算光照贴图的，已经被标注为弃用了，progressive lightmapper 则使用路径追踪的方式来计算光照贴图。</p>
+<p>光照贴图有不错的间接光效果（物体的颜色会在相邻物体有一点表现），材质的自发光项也会如同光源般对其他物体着色，但没有镜面反射光（因为镜面反射光是与摄像机位置有关的，不能提前计算）。</p>
+<p>光照贴图在正向渲染与延迟渲染中都可以使用。</p>
+
+        <h3 id="在着色器中使用光照贴图"   >
+          <a href="#在着色器中使用光照贴图" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#在着色器中使用光照贴图"></a> 在着色器中使用光照贴图</h3>
+      
+<p>Unity 在 Forward Base 或 Deferred 这两个 pass 使用光照贴图，此时就不使用顶点光照，也不计算球谐光照。</p>
+<p>采样光照贴图的 uv 由 Unity 以 <code>TEXCOORD1</code> 传给顶点着色器。</p>
+<p>光照贴图存储在 2D 纹理 <code>unity_Lightmap</code> 中，以 RGBM（之前提过的指数编码方式）或 dLDR（Double LDR，就是把 HDR 除以 2 后当 LDR 存，解码就再把 2 乘回去）编码 HDR，因此采样结果需要用 <code>DecodeLightmap()</code> 解码。</p>
+
+        <h3 id="适配-unity-的-lightmapper"   >
+          <a href="#适配-unity-的-lightmapper" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#适配-unity-的-lightmapper"></a> 适配 Unity 的 lightmapper</h3>
+      
+<p>Unity 绘制光照贴图的代码中，假定了颜色属性的名称应当是 <code>_Color</code>，alpha cutoff 属性的名称应当是 <code>_Cutoff</code>，只有这样，半透明物体和截断物体才能在使用光照贴图时正确绘制。</p>
+
+        <h3 id="meta-pass"   >
+          <a href="#meta-pass" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#meta-pass"></a> Meta Pass</h3>
+      
+<p>在绘制光照贴图时，Unity 使用 Meta pass 来处理物体的颜色、自发光等的影响，这就是使用光照贴图时能从一个物体上看到相邻物体颜色影响的原因。在其中，我们要得到物体的反照率、自发光颜色和镜面反射颜色，该部分就有点像是 Forward Base pass 的一个子集，之后交给 Unity 的函数 <code>UnityMetaFragment()</code> 处理。但这个函数内部其实不管反射颜色，所以当表面是不发光的粗糙金属时，因为纯金属也没有漫反射，就几乎不表现出对相邻物体的着色，但实际上应该会有的。Unity 的 trick 是，把镜面反射颜色按粗糙度加在反照率上：</p>
+<figure class="highlight c"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">float</span> oneMinusReflectivity;</span><br><span class="line">surfaceData.Albedo = DiffuseAndSpecularFromMetallic(GetAlbedo(fin), GetMetallic(fin),</span><br><span class="line">    surfaceData.SpecularColor, oneMinusReflectivity);</span><br><span class="line"><span class="keyword">float</span> roughness = SmoothnessToRoughness(GetSmoothness(fin)) * <span class="number">0.5</span>;</span><br><span class="line">surfaceData.Albedo += surfaceData.SpecularColor * roughness;</span><br></pre></td></tr></table></div></figure>
+<p>其中的 <code>SmoothnessToRoughness</code> 返回的是 1 减平滑度的平方，就像是我在 PBR 学习笔记中记录的那样，在着色器内部使用的粗糙度经常是外部输入粗糙度的平方，而不平方的粗糙度在 Unity 的着色器内被称作“感性的粗糙度（perceptual roughness）”。</p>
+
+        <h3 id="方向性光照贴图directionality-light-map"   >
+          <a href="#方向性光照贴图directionality-light-map" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#方向性光照贴图directionality-light-map"></a> 方向性光照贴图（Directionality Light Map）</h3>
+      
+<p>方向性光照贴图是另一张光照贴图（<code>unity_LightmapInd</code>），其存储的内容是接收光最大的一个方向，向量长度是方向性的大小，可以设置是否绘制该贴图。</p>
+<p>无方向的光照贴图，相当于这么大的光从四面八方均匀地打在表面上，在使用法线贴图时，凹凸感会表现得非常弱。使用方向性光照贴图，相当于这么大的光从某一个方向打来，我们可以用和法向的点积来处理光照，法线贴图的效果会表现得正常一些。Unity 使用 <code>DecodeDirectionalLightmap()</code> 来处理，其内部计算半朗泊（<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>0.5</mn><mo>+</mo><mn>0.5</mn><mrow><mi mathvariant="normal">d</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">t</mi></mrow><mo stretchy="false">(</mo><mi>n</mi><mo separator="true">,</mo><mi>l</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">0.5 + 0.5 \mathrm{dot}(n, l)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">5</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0</span><span class="mord">.</span><span class="mord">5</span><span class="mord"><span class="mord mathrm">d</span><span class="mord mathrm">o</span><span class="mord mathrm">t</span></span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mclose">)</span></span></span></span>）作为结果。</p>
+<figure class="highlight c"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> half3 <span class="title">DecodeDirectionalLightmap</span> <span class="params">(half3 color, fixed4 dirTex, half3 normalWorld)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// In directional (non-specular) mode Enlighten bakes dominant light direction</span></span><br><span class="line">    <span class="comment">// in a way, that using it for half Lambert and then dividing by a &quot;rebalancing coefficient&quot;</span></span><br><span class="line">    <span class="comment">// gives a result close to plain diffuse response lightmaps, but normalmapped.</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Note that dir is not unit length on purpose. Its length is &quot;directionality&quot;, like</span></span><br><span class="line">    <span class="comment">// for the directional specular lightmaps.</span></span><br><span class="line"></span><br><span class="line">    half halfLambert = dot(normalWorld, dirTex.xyz - <span class="number">0.5</span>) + <span class="number">0.5</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> color * halfLambert / max(<span class="number">1e-4</span>h, dirTex.w);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></div></figure>
+
+        <h3 id="光照探针"   >
+          <a href="#光照探针" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#光照探针"></a> 光照探针</h3>
+      
+<p>动态物体不会接收设置为使用光照贴图的光源，为了将其正常地融入到使用光照贴图地场景中，需要使用光照探针。</p>
+<p>光照探针以球谐函数的形式存储该点的光照信息，一组光照探针把其内部的空间划分为若干个四面体，对于每个动态物体，插值其中心点所在的那个四面体的四个顶点的球谐函数信息（四面体也能重心坐标，应该就是用这个插值的；探针组凸包外的就是三角形（？），至少显示的是这样；因为球谐函数信息是对整个物体固定的，当动态物体较大时效果会不太好）传入着色器，使用球谐光照完成着色（已经在第 5 节中介绍过了/加过这个功能了，所以不用增加任何代码）。</p>
+<p>不过这样动态物体依然不会产生阴影（不会遮蔽静态物体），也不会接收阴影（静态物体不投射实时阴影，如果能看到一点阴影的效果，是插值光照探针出来的）。</p>
+
+        <h2 id="17-mixed-lighting"   >
+          <a href="#17-mixed-lighting" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#17-mixed-lighting"></a> 17 Mixed Lighting</h2>
+      
+
+        <h3 id="混合光照"   >
+          <a href="#混合光照" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#混合光照"></a> 混合光照</h3>
+      
+<p>光源除了纯实时与使用光照贴图以外，还可以设置为混合。在此模式下，光照贴图依然会被生成，但不包含直接光。在渲染时，光源会像实时光源一样被计算。这么一来，相较于纯实时光照，添加了物体之间反射的间接光；相比纯光照贴图，添加了镜面反射光，允许动态物体，且动态物体与静态物体相互的阴影也能正常。不过付出了额外的纹理与采样、光照探针等代价。</p>
+<p>需要注意的是，Unity 为了性能考虑，在混合模式下，<code>UNITY_LIGHT_ATTENUATION()</code> 并不计算阴影淡出，<code>HANDLE_SHADOWS_BLENDING_IN_GI</code> 宏的定义与否标识了这一点，我们需要在自己的着色器里手动处理，就像在延迟光照中那样。</p>
+
+        <h3 id="阴影遮罩shadowmask"   >
+          <a href="#阴影遮罩shadowmask" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#阴影遮罩shadowmask"></a> 阴影遮罩（Shadowmask）</h3>
+      
+<p>为了减小混合光照昂贵的代价，可以把静态物体的阴影也烘培下来，设置是把混合光照的模式从默认的“baked indirect”切换为“shadowmask”，此时阴影信息会被单独烘培到一张贴图中（<code>unity_ShadowMask</code>），使用 R 通道保存，其中 0 表示完全被遮蔽。事实上，另外 3 个通道也能被用来分别保存阴影信息，光照体积不相交的光源可以使用同一通道，所以可以支持许多光源，在着色器中用 <code>unity_OcclusionMaskSelector</code> 与采样结果点积取得对应的分量；当光源实在是没有空闲的通道时，会把直接光烘培在光照贴图上，就像是纯光照贴图时那样。</p>
+<p>在质量设置中，Unity 提供了 2 种选项：distance shadowmask 与 shadowmask，前者的代价比普通的混合光照还要大，它不仅烘培静态物体的阴影，也绘制静态物体的实时阴影，而后者并不绘制静态物体的实时阴影，动态物体只能通过光照探针得到静态物体的阴影。</p>
+<p>要在延迟渲染中使用 shadowmask，需要一个额外的 G-Buffer 来存储从中采样的结果。</p>
+<p><code>unity_OcclusionMaskSelector</code> 总是至多有一个分量为 1，因此在延迟渲染中渲染出不太对劲的效果，一个本来接收了多个光源阴影的物体在渲染 shadowmask G-Buffer 时只渲染了一个光源的阴影上去（正向渲染会渲染多次，所以没事）。</p>
+
+        <h3 id="减性阴影subtractive-shadows"   >
+          <a href="#减性阴影subtractive-shadows" class="heading-link"><i class="fas fa-link"></i></a><a class="markdownIt-Anchor" href="#减性阴影subtractive-shadows"></a> 减性阴影（Subtractive Shadows）</h3>
+      
+<p>减性阴影/减性光照面向低性能设备，只支持正向渲染，只支持单一定向光。</p>
+<p>静态物体使用光照贴图着色，同时根据实时光照的屏幕空间阴影对阴影区域做衰减，使得动态物体可以在静态物体上留下阴影。动态物体使用光照探针和实时光照，不能直接接收静态物体的阴影。</p>
+<p>减性光照没有自己的关键字，其开启时，<code>LIGHTMAP_ON</code>、<code>SHADOWS_SCREEN</code>、<code>LIGHTMAP_SHADOW_MIXING</code> 开启而 <code>SHADOWS_SHADOWMASK</code> 关闭。</p>
+<p>在减性光照下，关闭直接光（因为烘培在光照贴图里了）；衰减间接漫反射光，在通过 <code>UNITY_LIGHT_ATTENUATION</code> 和淡出阴影的计算后得到一个衰减度 <code>atten</code>，如果光照使用朗泊，那么光照是</p>
+<figure class="highlight c"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">atten * ndotl * _LightColor0.rgb</span><br></pre></td></tr></table></div></figure>
+<p>我们是减去阴影，那就是减去</p>
+<figure class="highlight c"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">1</span> - atten) * ndotl * _LightColor0.rgb</span><br></pre></td></tr></table></div></figure>
+<p>其他要考虑的是，对环境光（<code>unity_ShadowColor</code>，减性阴影设置的阴影颜色）取 max、处理光源的阴影强度（用 <code>_LightShadowData.x</code> 插值）、对原来计算出来的间接漫反射光取 min（不能照亮烘培出来的阴影）。</p>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="http://pepcy.cf">Pepcy_Ch</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="http://pepcy.cf/Unity-%E4%B8%AD%E7%9A%84%E6%B8%B2%E6%9F%93-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89/">http://pepcy.cf/Unity-%E4%B8%AD%E7%9A%84%E6%B8%B2%E6%9F%93-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://pepcy.cf/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://pepcy.cf/tags/CG/">CG</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://pepcy.cf/tags/Unity/">Unity</a></span></div><nav class="post-paginator paginator"><div class="paginator-next"><a class="paginator-next__link" href="/Unity-%E4%B8%AD%E7%9A%84%E6%B8%B2%E6%9F%93-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"><span class="paginator-prev__text">Unity 中的渲染 学习笔记（三）</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#13-deferred-shading"><span class="toc-number">1.</span> <span class="toc-text">
+           13 Deferred Shading</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E5%90%91%E6%B8%B2%E6%9F%93%E4%B8%8E%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E7%9A%84%E7%BB%98%E5%88%B6%E9%A1%BA%E5%BA%8F%E5%B7%AE%E5%BC%82"><span class="toc-number">1.1.</span> <span class="toc-text">
+           正向渲染与延迟渲染的绘制顺序差异</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#g-buffer"><span class="toc-number">1.2.</span> <span class="toc-text">
+           G-Buffer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E4%B8%8E%E5%8F%8D%E5%B0%84"><span class="toc-number">1.3.</span> <span class="toc-text">
+           延迟渲染与反射</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14-fog"><span class="toc-number">2.</span> <span class="toc-text">
+           14 Fog</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E5%90%8C%E7%A7%8D%E7%B1%BB%E7%9A%84%E9%9B%BE"><span class="toc-number">2.1.</span> <span class="toc-text">
+           不同种类的雾</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%BE%E5%9D%90%E6%A0%87"><span class="toc-number">2.2.</span> <span class="toc-text">
+           雾坐标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BB%B6%E8%BF%9F%E6%B8%B2%E6%9F%93%E4%B8%AD%E7%9A%84%E9%9B%BE"><span class="toc-number">2.3.</span> <span class="toc-text">
+           延迟渲染中的雾</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#15-deferred-lights"><span class="toc-number">3.</span> <span class="toc-text">
+           15 Deferred Lights</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ldr-%E9%A2%9C%E8%89%B2%E5%90%8E%E5%A4%84%E7%90%86"><span class="toc-number">3.1.</span> <span class="toc-text">
+           LDR 颜色后处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E5%90%91%E5%85%89"><span class="toc-number">3.2.</span> <span class="toc-text">
+           定向光</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%81%9A%E5%85%89"><span class="toc-number">3.3.</span> <span class="toc-text">
+           聚光</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%82%B9%E5%85%89"><span class="toc-number">3.4.</span> <span class="toc-text">
+           点光</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%81%BF%E5%85%8D%E4%B8%8D%E5%BF%85%E8%A6%81%E7%9A%84%E9%98%B4%E5%BD%B1%E9%87%87%E6%A0%B7"><span class="toc-number">3.5.</span> <span class="toc-text">
+           避免不必要的阴影采样</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#16-static-lighting"><span class="toc-number">4.</span> <span class="toc-text">
+           16 Static Lighting</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%89%E7%85%A7%E8%B4%B4%E5%9B%BElight-map"><span class="toc-number">4.1.</span> <span class="toc-text">
+           光照贴图（Light Map）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8%E7%9D%80%E8%89%B2%E5%99%A8%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%85%89%E7%85%A7%E8%B4%B4%E5%9B%BE"><span class="toc-number">4.2.</span> <span class="toc-text">
+           在着色器中使用光照贴图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%82%E9%85%8D-unity-%E7%9A%84-lightmapper"><span class="toc-number">4.3.</span> <span class="toc-text">
+           适配 Unity 的 lightmapper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#meta-pass"><span class="toc-number">4.4.</span> <span class="toc-text">
+           Meta Pass</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E5%90%91%E6%80%A7%E5%85%89%E7%85%A7%E8%B4%B4%E5%9B%BEdirectionality-light-map"><span class="toc-number">4.5.</span> <span class="toc-text">
+           方向性光照贴图（Directionality Light Map）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%89%E7%85%A7%E6%8E%A2%E9%92%88"><span class="toc-number">4.6.</span> <span class="toc-text">
+           光照探针</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#17-mixed-lighting"><span class="toc-number">5.</span> <span class="toc-text">
+           17 Mixed Lighting</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%B7%E5%90%88%E5%85%89%E7%85%A7"><span class="toc-number">5.1.</span> <span class="toc-text">
+           混合光照</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B4%E5%BD%B1%E9%81%AE%E7%BD%A9shadowmask"><span class="toc-number">5.2.</span> <span class="toc-text">
+           阴影遮罩（Shadowmask）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%8F%E6%80%A7%E9%98%B4%E5%BD%B1subtractive-shadows"><span class="toc-number">5.3.</span> <span class="toc-text">
+           减性阴影（Subtractive Shadows）</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/assets/avatar.jpg" alt="avatar"></div><p class="sidebar-ov-author__text">Pepcy CHEN</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/PepcyCh" target="_blank" rel="noopener" data-popover="Github" data-popover-pos="up"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span></a><a class="sidebar-ov-social-item" href="https://www.zhihu.com/people/pepcy-chen" target="_blank" rel="noopener" data-popover="知乎" data-popover-pos="up"><span class="sidebar-ov-social-item__icon">知</span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">193</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">6</div><div class="sidebar-ov-state-item__name">分类</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">128</div><div class="sidebar-ov-state-item__name">标签</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2017~2021</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Pepcy_Ch</span></div><div><span>由 <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a> 强力驱动</span><span> v5.0.0</span><span class="footer__devider">|</span><span>主题 - <a href="https://github.com/liuyib/hexo-theme-stun/" title="Stun" target="_blank" rel="noopener">Stun</a></span><span> v2.6.2</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><div class="search-mask"></div><div class="search-popup"><span class="search-close"></span><div class="search-input"><input placeholder="搜索文章（支持多关键词，请用空格分隔）"></div><div class="search-results"></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script>function initSearch() {
+  var isXML = true;
+  var search_path = 'search.json';
+
+  if (!search_path) {
+    search_path = 'search.xml';
+  } else if (/json$/i.test(search_path)) {
+    isXML = false;
+  }
+
+  var path = '/' + search_path;
+  $.ajax({
+    url: path,
+    dataType: isXML ? 'xml' : 'json',
+    async: true,
+    success: function (res) {
+      var datas = isXML ? $('entry', res).map(function () {
+        // 将 XML 转为 JSON
+        return {
+          title: $('title', this).text(),
+          content: $('content', this).text(),
+          url: $('url', this).text()
+        };
+      }).get() : res;
+      var $input = $('.search-input input');
+      var $result = $('.search-results');
+      // 搜索对象（标题、内容）的权重，影响显示顺序
+      var WEIGHT = { title: 100, content: 1 };
+      var searchPost = function () {
+        var searchText = $input.val().toLowerCase().trim();
+        // 根据空白字符分隔关键字
+        var keywords = searchText.split(/[\s]+/);
+        // 搜索结果
+        var matchPosts = [];
+
+        // 有多个关键字时，将原文字整个保存下来
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        // 防止未输入字符时搜索
+        if (searchText.length > 0) {
+          datas.forEach(function (data) {
+            var isMatch  = false;
+            // 没有标题的文章使用预设的 i18n 变量代替
+            var title = (data.title && data.title.trim()) || '[ 文章无标题 ]';
+            var titleLower = title && title.toLowerCase();
+            // 删除 HTML 标签 和 所有空白字符
+            var content = data.content && data.content.replace(/<[^>]+>/g, '');
+            var contentLower = content && content.toLowerCase();
+            // 删除重复的 /
+            var postURL = data.url && decodeURI(data.url).replace(/\/{2,}/g, '/');
+            // 标题中匹配到的关键词
+            var titleHitSlice = [];
+            // 内容中匹配到的关键词
+            var contentHitSlice = [];
+
+            keywords.forEach(function (keyword) {
+              /**
+              * 获取匹配的关键词的索引
+              * @param {String} keyword 要匹配的关键字
+              * @param {String} text 原文字
+              * @param {Boolean} caseSensitive 是否区分大小写
+              * @param {Number} weight 匹配对象的权重。权重大的优先显示
+              * @return {Array}
+              */
+              function getIndexByword (word, text, caseSensitive, weight) {
+                if (!word || !text) {
+                  return [];
+                };
+
+                var startIndex = 0; // 每次匹配的开始索引
+                var index = -1;     // 匹配到的索引值
+                var result = [];    // 匹配结果
+
+                if (!caseSensitive) {
+                  word = word.toLowerCase();
+                  text = text.toLowerCase();
+                }
+
+                while((index = text.indexOf(word, startIndex)) !== -1) {
+                  var hasMatch = false;
+                  // 索引位置相同的关键词，保留长度较长的
+                  titleHitSlice.forEach(function (hit) {
+                    if (hit.index === index && hit.word.length < word.length) {
+                      hit.word = word;
+                      hasMatch = true;
+                    }
+                  });
+                  startIndex = index + word.length;
+                  !hasMatch && result.push({ index: index, word: word, weight: weight });
+                }
+                return result;
+              }
+              titleHitSlice = titleHitSlice.concat(getIndexByword(keyword, titleLower, false, WEIGHT.title));
+              contentHitSlice = contentHitSlice.concat(getIndexByword(keyword, contentLower, false, WEIGHT.content));
+            });
+
+            var hitTitle = titleHitSlice.length;
+            var hitContent = contentHitSlice.length;
+
+            if (hitTitle > 0 || hitContent > 0) {
+              isMatch = true;
+            }
+            if (isMatch) {
+              ;[titleHitSlice, contentHitSlice].forEach(function (hit) {
+                // 按照匹配文字的索引的递增顺序排序
+                hit.sort(function (left, right) {
+                  return left.index - right.index;
+                });
+              });
+              /**
+              * 给文本中匹配到的关键词添加标记，从而进行高亮显示
+              * @param {String} text 原文本
+              * @param {Array} hitSlice 匹配项的索引信息
+              * @param {Number} start 开始索引
+              * @param {Number} end 结束索引
+              * @return {String}
+              */
+              function highlightKeyword (text, hitSlice, start, end) {
+                if (!text || !hitSlice || !hitSlice.length) {
+                  return;
+                }
+
+                var result = '';
+                var startIndex = start;
+                var endIndex = end;
+                hitSlice.forEach(function (hit) {
+                  if (hit.index < startIndex) {
+                    return;
+                  }
+
+                  var hitWordEnd = hit.index + hit.word.length;
+                  result += text.slice(startIndex, hit.index);
+                  result += '<b>' + text.slice(hit.index, hitWordEnd) + '</b>';
+                  startIndex = hitWordEnd;
+                });
+                result += text.slice(startIndex, endIndex);
+                return result;
+              }
+
+              var postData = {};
+              // 文章总的搜索权重
+              var postWeight = titleHitSlice.length * WEIGHT.title + contentHitSlice.length * WEIGHT.content;
+              // 标记匹配关键词后的标题
+              var postTitle = highlightKeyword(title, titleHitSlice, 0, title.length) || title;
+              // 标记匹配关键词后的内容
+              var postContent;
+              // 显示内容的长度
+              var SHOW_WORD_LENGTH = 200;
+              // 命中关键词前的字符显示长度
+              var SHOW_WORD_FRONT_LENGTH = 20;
+              var SHOW_WORD_END_LENGTH = SHOW_WORD_LENGTH - SHOW_WORD_FRONT_LENGTH;
+
+              // 截取匹配的第一个字符，前后共 200 个字符来显示
+              if (contentHitSlice.length > 0) {
+                var firstIndex = contentHitSlice[0].index;
+                var start = firstIndex > SHOW_WORD_FRONT_LENGTH ? firstIndex - SHOW_WORD_FRONT_LENGTH : 0;
+                var end = firstIndex + SHOW_WORD_END_LENGTH;
+                postContent = highlightKeyword(content, contentHitSlice, start, end);
+              } else { // 未匹配到内容，直接截取前 200 个字符来显示
+                postContent = content.slice(0, SHOW_WORD_LENGTH);
+              }
+              postData.title = postTitle;
+              postData.content = postContent;
+              postData.url = postURL;
+              postData.weight = postWeight;
+              matchPosts.push(postData);
+            }
+          });
+        }
+
+        var resultInnerHtml = '';
+        if (matchPosts.length) {
+          // 按权重递增的顺序排序，使权重大的优先显示
+          matchPosts.sort(function (left, right) {
+            return right.weight - left.weight;
+          });
+          resultInnerHtml += '<ul>';
+          matchPosts.forEach(function (post) {
+            resultInnerHtml += '<li><a class="search-results-title" href="' + post.url + '">';
+            resultInnerHtml += post.title;
+            resultInnerHtml += '</a><div class="search-results-content">';
+            resultInnerHtml += post.content;
+            resultInnerHtml += '</div></li>';
+          });
+          resultInnerHtml += '</ul>';
+        } else {
+          resultInnerHtml += '<div class="search-results-none"><i class="far fa-meh"></i></div>';
+        }
+        $result.html(resultInnerHtml);
+      };
+      $input.on('input', searchPost);
+      $input.on('keyup', function (e) {
+        if (e.keyCode === Stun.utils.codeToKeyCode('Enter')) {
+          searchPost();
+        }
+      });
+    }
+  });
+}
+
+function closeSearch () {
+  $('body').css({ overflow: 'auto' });
+  $('.search-popup').css({ display: 'none' });
+  $('.search-mask').css({ display: 'none' });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+  Stun.utils.pjaxReloadLocalSearch = function () {
+    $('.header-nav-search').on('click', function (e) {
+      e.stopPropagation();
+      $('body').css('overflow', 'hidden');
+      $('.search-popup')
+        .velocity('stop')
+        .velocity('transition.expandIn', {
+          duration: 300,
+          complete: function () {
+            $('.search-popup input').focus();
+          }
+        });
+      $('.search-mask')
+        .velocity('stop')
+        .velocity('transition.fadeIn', {
+          duration: 300
+        });
+
+      initSearch();
+    });
+    $('.search-mask, .search-close').on('click', function () {
+      closeSearch();
+    });
+    $(document).on('keydown', function (e) {
+      // Escape <=> 27
+      if (e.keyCode === Stun.utils.codeToKeyCode('Escape')) {
+        closeSearch();
+      }
+    });
+  };
+
+  Stun.utils.pjaxReloadLocalSearch();
+}, false);
+
+function safeOpenUrl(url) {
+  var newTab = window.open();
+  newTab.opener = null;
+  newTab.location = url;
+}
+
+function extSearch(engine) {
+  var engines = {
+    google: 'https://www.google.com/search?q=',
+    bing: 'https://cn.bing.com/search?q=',
+    baidu: 'https://www.baidu.com/s?ie=UTF-8&wd=',
+  };
+  var host = window.location.host;
+  var query = $('.search-input input').val().toLowerCase().trim();
+  var uri = engines[engine] + query + ' site:' + host;
+
+  if (query) {
+    safeOpenUrl(uri);
+  } else {
+    Stun.utils.popAlert('warning', '请输入字符');
+  }
+}
+
+var assistSearchList = window.CONFIG.assistSearch;
+
+if (Array.isArray(assistSearchList)) {
+  assistSearchList.forEach(function (name) {
+    document.querySelector('.search-btns-item--' + name).addEventListener('click', function () {
+      extSearch(name);
+    }, false);
+  });
+}</script><link href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" rel="stylesheet" type="text/css"><link href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/copy-tex.css" rel="stylesheet" type="text/css"><script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/copy-tex.min.js"></script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script><script type="application/json" src="/search.json"></script></body></html>
